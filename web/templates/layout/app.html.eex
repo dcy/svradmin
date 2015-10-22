@@ -33,41 +33,47 @@
           <!-- Navbar Right Menu -->
           <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
-              <!-- User Account: style can be found in dropdown.less -->
-              <li class="dropdown user user-menu">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <img src="/images/gaoxiao.gif" class="user-image" alt="User Image"/>
-                  <span class="hidden-xs">Fuck</span>
-                </a>
-                <ul class="dropdown-menu">
-                  <!-- User image -->
-                  <li class="user-header">
-                    <img src="/images/gaoxiao.gif" class="img-circle" alt="User Image" />
-                    <p>
-                    Fuck
-                    </p>
-                  </li>
-                  <!-- Menu Body -->
-                  <!-- <li class="user-body">
-                    <div class="col-xs-4 text-center">
-                      <a href="#">Followers</a>
-                    </div>
-                    <div class="col-xs-4 text-center">
-                      <a href="#">Sales</a>
-                    </div>
-                    <div class="col-xs-4 text-center">
-                      <a href="#">Friends</a>
-                    </div>
-                  </li> -->
-                  <li class="user-footer">
-                    <div class="pull-left">
-                      <a id="changePassword" class="btn btn-default btn-flat" href="#">修改密码</a>
-                    </div>
-                    <div class="pull-right">
-                      <a href="/account/logout" class="btn btn-default btn-flat">退出</a>
-                    </div>
-                  </li>
-                  <!-- Menu Footer-->
+              <%= if @current_user do %>
+                <!-- User Account: style can be found in dropdown.less -->
+                <li class="dropdown user user-menu">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <img src="/images/gaoxiao.gif" class="user-image" alt="User Image"/>
+                    <span class="hidden-xs"><%= @current_user.name %></span>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <!-- User image -->
+                    <li class="user-header">
+                      <img src="/images/gaoxiao.gif" class="img-circle" alt="User Image" />
+                      <p>
+                      <%= if @current_user do %>
+                        <%= @current_user.name %>
+                      <% end %>
+                      </p>
+                    </li>
+                    <!-- Menu Body -->
+                    <!-- <li class="user-body">
+                      <div class="col-xs-4 text-center">
+                        <a href="#">Followers</a>
+                      </div>
+                      <div class="col-xs-4 text-center">
+                        <a href="#">Sales</a>
+                      </div>
+                      <div class="col-xs-4 text-center">
+                        <a href="#">Friends</a>
+                      </div>
+                    </li> -->
+                    <li class="user-footer">
+                      <div class="pull-left">
+                        <a id="changePassword" class="btn btn-default btn-flat" href="#">修改密码</a>
+                      </div>
+                      <div class="pull-right">
+                        <%= link "退出", to: session_path(@conn, :delete, @current_user), method: "delete", class: "btn btn-default btn-flat" %>
+                      </div>
+                    </li>
+                  <% else %>
+                    <li><a href="/login">登录</a></li>
+                  <% end %>
+                    <!-- Menu Footer-->
                 </ul>
               </li>
             </ul>
@@ -83,11 +89,16 @@
             <div class="pull-left image">
               <img src="/images/gaoxiao.gif" class="img-circle" alt="User Image" />
             </div>
-            <div class="pull-left info">
-              <p>Fuck</p>
-
-              <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-            </div>
+            <%= if @current_user do %>
+              <div class="pull-left info">
+                <p><%= @current_user.name %></p>
+                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+              </div>
+            <% else %>
+              <div class="pull-left info">
+                <i class="fa fa-circle text-muted"></i> Offline
+              </div>
+            <% end %>
           </div>
           <!-- search form -->
           <!-- <form action="#" method="get" class="sidebar-form">
@@ -241,6 +252,8 @@
 
       <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper">
+        <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+        <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
         <%= @inner %>
       </div><!-- /.content-wrapper -->
 
@@ -257,7 +270,7 @@
     <script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
     <script src="//cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
-    <script src="<%= static_path(@conn, "/js/vendor.js") %>"></script>
+    <!-- <script src="<%= static_path(@conn, "/js/vendor.js") %>"></script> -->
     <!-- <script src="//cdn.bootcss.com/vex-js/2.3.2/js/vex.combined.min.js"></script> -->
     <!-- <script>vex.defaultOptions.className = 'vex-theme-os';</script> -->
   </body>
