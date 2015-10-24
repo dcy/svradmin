@@ -29,13 +29,29 @@
             </tr>
             <%= for svr <- @svrs do %>
               <tr>
-                <td><%= svr.name %></td>
+                <td><span class="badge"><%= svr.name %></span></td>
                 <td><%= svr.ip %></td>
                 <td><%= svr.port %></td>
                 <td><%= svr[:log_port] %></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>
+                  <%= if svr.is_live == true do %>
+                    <span class="badge bg-green"><i class="fa fa-play"></i>开启中</span>
+                  <% else %>
+                    <span class="badge text-muted"><i class="fa fa-power-off"></i>未开启</span>
+                  <% end %>
+                </td>
+                <td>
+                  <button class="btn btn-primary btn-xs reload_confs" svr-id=<%= svr.id %> data-loading-text="<i class='fa fa-spinner fa-pulse'></i>热更中"><i class="fa fa-refresh"></i>热更配置</button>
+                  <button class="btn btn-warning btn-xs reload_svr" svr-id=<%= svr.id %> data-loading-text="<i class='fa fa-spinner fa-pulse'></i>热更中"><i class="fa fa-refresh"></i>热更整服</button>
+                  <button class="btn btn-danger btn-xs reset_svr" svr-id=<%= svr.id %> data-loading-text="<i class='fa fa-spinner fa-pulse'></i>清除中"><i class="fa fa-trash"></i>清数据库</button>
+                </td>
+                <td>
+                  <%= if svr.is_live do %>
+                    <button class="btn btn-danger btn-xs close-svr" svr-id=<%= svr.id %> ><i class="fa fa-power-off"></i>关服</button>
+                  <% else %>
+                    <button class="btn btn-success btn-xs open-svr" svr-id=<%= svr.id %> ><i class="fa fa-play"></i>开服</button>
+                  <% end %>
+                </td>
               </tr>
             <% end %>
           </table>

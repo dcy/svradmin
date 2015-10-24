@@ -2,7 +2,11 @@ defmodule Svradmin.SessionController do
   use Svradmin.Web, :controller
 
   def new(conn, _) do
-    render conn, "new.html"
+    if conn.assigns[:current_user] do
+      conn |> redirect(to: page_path(conn, :index))
+    else
+      render conn, "new.html"
+    end
   end
 
   def create(conn, %{"session" => %{"name" => user, "password" =>

@@ -21,6 +21,7 @@ defmodule Svradmin.Router do
     resources "/sessions", SessionController, only: [:new, :create, :delete]
     get "/login", SessionController, :new
     resources "/users", UserController
+    post "/reload_confs", PageController, :reload_confs
   end
 
   # Other scopes may use custom stacks.
