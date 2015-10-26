@@ -121,8 +121,8 @@
                 <i class="fa fa-gamepad"></i> <span>服务器管理</span> <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="index.html"><i class="fa fa-circle-o"></i> 服务器列表</a></li>
-                <li class="active"><a href="index2.html"><i class="fa fa-circle-o"></i> 操作历史</a></li>
+                <li><a href="#"><i class="fa fa-circle-o"></i> 服务器列表</a></li>
+                <li class=""><a href="#"><i class="fa fa-circle-o"></i> 操作历史</a></li>
               </ul>
             </li>
             <li class="header">LABELS</li>

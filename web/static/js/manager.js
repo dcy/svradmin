@@ -53,3 +53,62 @@ $(".reload_confs").click(function(){
         location.href = "/login"
     }
 })
+
+$(".reload_svr").click(function(){
+    if (is_login){
+        var cur_svr_id = $(this).attr('svr-id')
+        var timestamp = new Date().getTime()
+        $.post("/reload_svr",
+               {svr_id: cur_svr_id, time: timestamp, _csrf_token: _csrf_token},
+               function(data){
+                   $('.reload_svr').button('reset')
+                   var result = data.result
+                   if (result == "serverNotLive"){
+                       vex_alert_error("不能连接服务器，服务器未开启或者异常!");
+                   }
+                   else if (result == "success"){
+                       vex_confirm("成功热更", function() {
+                           location.reload()
+                       });
+                   }
+                   else {
+                       vex_alert_error("数据校验不过: " + result)
+                   }
+               }
+              );
+    }
+    else{
+        $('.reload_svr').button('reset')
+        location.href = "/login"
+    }
+})
+
+$(".reset_svr").click(function() {
+    if (is_login) {
+        var cur_svr_id = $(this).attr('svr-id')
+        vex_confirm("清除数据库，会删除所有角色及其他数据，确定清除？", function(value) {
+            if (value) {
+                var timestamp = new Date().getTime()
+                $.post('/reset_svr',
+                       {svr_id: cur_svr_id, time: timestamp, _csrf_token: _csrf_token},
+                       function(data) {
+                           $('.reset_svr').button('reset')
+                           var result = data.result
+                           if (result == "success") {
+                               vex_confirm("成功清服", function() {
+                                   location.reload()
+                               });
+                           }
+                       }
+                      )
+            }
+            else {
+                $('.reset_svr').button('reset')
+            }
+        })
+    }
+    else{
+        $('.reset_svr').button('reset')
+        location.href = "/login"
+    }
+})

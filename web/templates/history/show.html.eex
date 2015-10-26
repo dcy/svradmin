@@ -1,0 +1,23 @@
+<h2>Show history</h2>
+
+<ul>
+
+  <li>
+    <strong>Who:</strong>
+    <%= @history.who %>
+  </li>
+
+  <li>
+    <strong>What:</strong>
+    <%= @history.what %>
+  </li>
+
+  <li>
+    <strong>Svr:</strong>
+    <%= @history.svr_id %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: history_path(@conn, :edit, @history) %>
+<%= link "Back", to: history_path(@conn, :index) %>

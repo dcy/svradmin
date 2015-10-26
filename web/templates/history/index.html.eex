@@ -1,0 +1,30 @@
+<h2>Listing historys</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Who</th>
+      <th>What</th>
+      <th>Svr</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for history <- @historys do %>
+    <tr>
+      <td><%= history.who %></td>
+      <td><%= history.what %></td>
+      <td><%= history.svr_id %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: history_path(@conn, :show, history), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: history_path(@conn, :edit, history), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: history_path(@conn, :delete, history), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New history", to: history_path(@conn, :new) %>

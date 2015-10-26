@@ -59,4 +59,42 @@
       </div>
     </div>
   </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">最近操作历史<span class="badge"><%= length(@historys) %></span></h3>
+        </div>
+        <div class="box-body table-responsive no-padding">
+          <table class="table table-hover">
+            <tr>
+              <th>谁</th>
+              <th>哪个服</th>
+              <th>干什么</th>
+              <th>时间</th>
+            </tr>
+            <%= for history <- @historys do %>
+              <tr>
+                <td><span class="badge bg-green"><%= history.who %></span></td>
+                <td><span class="badge"><%= history.svr_name %></span></td>
+                <td>
+                  <%= cond do %>
+                    <%= history.what == 1 -> %> 
+                    <span class="badge bg-blue"><%= history.what_str %></span>
+                    <%= history.what == 2 -> %>
+                    <span class="badge bg-yellow"><%= history.what_str %></span>
+                    <%= history.what == 3 -> %>
+                    <span class="badge bg-red"><%= history.what_str %></span>
+                  <% end %>
+                </td>
+                <td><%= history.time %></td>
+              </tr>
+            <% end %>
+            
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>

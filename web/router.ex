@@ -22,6 +22,9 @@ defmodule Svradmin.Router do
     get "/login", SessionController, :new
     resources "/users", UserController
     post "/reload_confs", PageController, :reload_confs
+    post "/reload_svr", PageController, :reload_svr
+    post "/reset_svr", PageController, :reset_svr
+    resources "/historys", HistoryController
   end
 
   # Other scopes may use custom stacks.

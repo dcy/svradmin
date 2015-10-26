@@ -1,0 +1,6 @@
+<h2>Edit history</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: history_path(@conn, :update, @history) %>
+
+<%= link "Back", to: history_path(@conn, :index) %>
