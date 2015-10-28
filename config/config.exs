@@ -27,3 +27,12 @@ import_config "#{Mix.env}.exs"
 config :phoenix, :generators,
   migration: true,
   binary_id: false
+
+
+# Configure Something
+config :svradmin, :svr_conf,
+  svrs: [
+    %{:id=>1, :node=>:"sanguo_1@192.168.0.5", :path=>"/home/dcy/sanguo/trunk/server/", :name=>"trunk服务器", :ip=>"192.168.0.5", :port=>1000, :log_port=>7001, :is_show=>true},
+    %{:id=>2, :node=>:"sanguo_2@192.168.0.6", :path=>"/home/dcy/sanguo/trunk/server1/", :name=>"分支服务器", :ip=>"192.168.0.6", :port=>1000, :log_port=>7001, :is_show=>true}
+  ]
+  

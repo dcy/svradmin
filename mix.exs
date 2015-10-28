@@ -19,7 +19,7 @@ defmodule Svradmin.Mixfile do
   def application do
     [mod: {Svradmin, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger,
-                    :phoenix_ecto, :mariaex]]
+                    :phoenix_ecto, :mariaex, :logger_file_backend]]
   end
 
   # Specifies which paths to compile per environment.
@@ -35,6 +35,8 @@ defmodule Svradmin.Mixfile do
      {:mariaex, ">= 0.0.0"},
      {:phoenix_html, "~> 2.1"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
+     {:exrm, "~> 0.19.9"},
+     {:logger_file_backend, "~> 0.0.5"},
      {:cowboy, "~> 1.0"}]
   end
 
