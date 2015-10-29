@@ -12,6 +12,16 @@
     <%= @user.password %>
   </li>
 
+  <li>
+    <strong>CnName:</strong>
+    <%= @user.cn_name %>
+  </li>
+
+  <li>
+    <strong>IsAdmin:</strong>
+    <%= @user.is_admin %>
+  </li>
+
 </ul>
 
 <%= link "Edit", to: user_path(@conn, :edit, @user) %>

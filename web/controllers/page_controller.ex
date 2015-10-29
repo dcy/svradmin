@@ -2,7 +2,6 @@ defmodule Svradmin.PageController do
   use Svradmin.Web, :controller
   import Util
   require Logger
-  alias Svradmin.User
   alias Svradmin.History
 
   defmacro type_reload_confs do
@@ -24,44 +23,56 @@ defmodule Svradmin.PageController do
 
   def reload_confs(conn, %{"svr_id" => str_svr_id}) do
     {svr_id, _} = Integer.parse(str_svr_id)
-    result = case is_svr_live(svr_id) do
+    {result, remark} = case is_svr_live(svr_id) do
       false ->
-        "serverNotLive"
+        {"serverNotLive", ""}
       true -> 
         svr = get_svr(svr_id)
         %{:node=>node, :path=>path} = svr
         System.cmd("svn", ["up"], cd: path)
-        :os.cmd(to_char_list("cd " <> path <> "; ./rebar compile skip_deps=true"))
-        reload(node, :data_confs)
-        changeset = History.changeset(%History{}, %{"who" => conn.assigns.current_user.name, "what" => type_reload_confs, "svr_id" => svr_id})
-        Repo.insert(changeset)
-        case validate_confs(node) do
-          :ok -> "success"
-          other -> other
+        IO.inspect({"path", path})
+        case System.cmd("sh", ["make.sh"], cd: path <> "script") do
+        #case System.cmd("/bin/rebar", ["compile"], cd: path) do
+          {_, 0} ->
+            reload(node, :data_confs)
+            changeset = History.changeset(%History{}, %{"who" => conn.assigns.current_user.cn_name, "what" => type_reload_confs, "svr_id" => svr_id})
+            Repo.insert(changeset)
+            case validate_confs(node) do
+              :ok -> {"success", ""}
+              other -> {"validateFail", other} 
+            end
+          {fail_reason, 1} ->
+            {"makeFail", fail_reason}
         end
     end
-    json conn, %{:result=>result}
+    IO.inspect({"result", result, remark})
+    json conn, %{:result=>result, :remark=>remark}
   end
 
   def reload_svr(conn, %{"svr_id" => str_svr_id}) do
     {svr_id, _} = Integer.parse(str_svr_id)
-    result = case is_svr_live(svr_id) do
+    {result, remark} = case is_svr_live(svr_id) do
       false ->
-        "serverNotLive"
+        {"serverNotLive", ""}
       true -> 
         svr = get_svr(svr_id)
         %{:node=>node, :path=>path} = svr
         System.cmd("svn", ["up"], cd: path)
-        :os.cmd(to_char_list("cd " <> path <> "; ./rebar compile skip_deps=true"))
-        reload(node, :all)
-        changeset = History.changeset(%History{}, %{"who" => conn.assigns.current_user.name, "what" => type_reload_svr, "svr_id" => svr_id})
-        Repo.insert(changeset)
-        case validate_confs(node) do
-          :ok -> "success"
-          other -> other
+        case System.cmd("sh", ["make.sh"], cd: path <> "script") do
+        #case System.cmd("rebar", ["compile"], cd: path <> "script") do
+          {_, 0} ->
+            reload(node, :all)
+            changeset = History.changeset(%History{}, %{"who" => conn.assigns.current_user.cn_name, "what" => type_reload_svr, "svr_id" => svr_id})
+            Repo.insert(changeset)
+            case validate_confs(node) do
+              :ok -> {"success", ""}
+              other -> {"validateFail", other}
+            end
+          {fail_reason, 1} ->
+            {"makeFail", fail_reason}
         end
     end
-    json conn, %{:result=>result}
+    json conn, %{:result=>result, :remark=>remark}
   end
 
   def reset_svr(conn, %{"svr_id" => str_svr_id}) do
@@ -77,24 +88,16 @@ defmodule Svradmin.PageController do
           false -> raise "canNotConnectTheNode"
         end
     end
-    db_script_path = path <> "db_script"
-    :os.cmd(to_char_list("cd " <> db_script_path <> "; python init_db.py"))
-    script_path = path <> "script"
-    :os.cmd(to_char_list("cd " <> script_path <> "; python start_daemon_server.py"))
-    changeset = History.changeset(%History{}, %{"who" => conn.assigns.current_user.name, "what" => type_reset_svr, "svr_id" => svr_id})
+    #db_script_path = path <> "db_script"
+    #:os.cmd(to_char_list("cd " <> db_script_path <> "; python init_db.py"))
+    System.cmd("python", ["init_db.py"], cd: path <> "db_script")
+    #script_path = path <> "script"
+    #:os.cmd(to_char_list("cd " <> script_path <> "; python start_daemon_server.py"))
+    System.cmd("python", ["start_daemon_server.py"], cd: path <> "script")
+    changeset = History.changeset(%History{}, %{"who" => conn.assigns.current_user.cn_name, "what" => type_reset_svr, "svr_id" => svr_id})
     Repo.insert(changeset)
     json conn, %{:result=> "success"}
   end
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -108,13 +111,8 @@ defmodule Svradmin.PageController do
   end
 
 
-  ########private functions########
-  defp is_svr_live(svr_id) do
-    svr = get_svr(svr_id)
-    %{:node=>node} = svr
-    is_node_live(node)
-  end
 
+  ########private functions########
   defp get_svr(svr_id) do
     svrs = svrs()
     mapskeyfind(svr_id, :id, svrs)
@@ -182,9 +180,6 @@ defmodule Svradmin.PageController do
         raise "canNotConnectTheNode"
     end
   end
-
-
-
 
 
 end

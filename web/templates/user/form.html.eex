@@ -21,6 +21,16 @@
   </div>
 
   <div class="form-group">
+    <%= label f, :cn_name, "CnName", class: "control-label" %>
+    <%= text_input f, :cn_name, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :is_admin, "IsAdmin", class: "control-label" %>
+    <%= text_input f, :is_admin, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
     <%= submit "Submit", class: "btn btn-primary" %>
   </div>
 <% end %>

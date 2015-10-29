@@ -25,6 +25,7 @@ defmodule Svradmin.Router do
     post "/reload_svr", PageController, :reload_svr
     post "/reset_svr", PageController, :reset_svr
     resources "/historys", HistoryController
+    post "/change_password", SessionController, :change_password 
   end
 
   # Other scopes may use custom stacks.

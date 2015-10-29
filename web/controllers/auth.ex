@@ -57,4 +57,17 @@ defmodule Svradmin.Auth do
       |> halt()
     end
   end
+
+  def require_admin(conn, _opts) do
+    if conn.assigns.current_user do
+      if conn.assigns.current_user.is_admin == 1 do
+        conn
+      else
+        conn |> redirect(to: Helpers.page_path(conn, :index))
+      end
+    else
+        conn |> redirect(to: Helpers.page_path(conn, :index))
+    end
+  end
+
 end

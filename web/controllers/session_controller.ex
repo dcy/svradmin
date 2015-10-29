@@ -1,5 +1,6 @@
 defmodule Svradmin.SessionController do
   use Svradmin.Web, :controller
+  alias Svradmin.User
 
   def new(conn, _) do
     if conn.assigns[:current_user] do
@@ -30,4 +31,32 @@ defmodule Svradmin.SessionController do
     |> put_flash(:info, "You have been logged out")
     |> redirect(to: page_path(conn, :index))
   end
+
+  def change_password(conn, %{"ori_password"=>ori_password, "new_password"=>new_password}) do
+    current_user = conn.assigns[:current_user]
+    IO.inspect(current_user)
+    if current_user do
+      %User{password: password, id: id} = current_user
+      IO.inspect({"password", password})
+      IO.inspect({"ori_password", ori_password})
+      result = 
+      case password == ori_password do
+        false ->
+          "oriPasswordWrong"
+        true ->
+          user = Repo.get!(User, id)
+          changeset = User.changeset(user, %{"password"=>new_password})
+          case Repo.update(changeset) do
+            {:ok, user} ->
+              "success"
+            {:error, changeset} ->
+              "fail"
+          end
+      end
+      json conn, %{:result => result}
+    else
+      json conn, %{:result => "fail"}
+    end
+  end
+
 end

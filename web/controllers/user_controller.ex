@@ -2,8 +2,10 @@ defmodule Svradmin.UserController do
   use Svradmin.Web, :controller
 
   alias Svradmin.User
+  import Svradmin.Auth, only: [require_admin: 2]
 
   plug :scrub_params, "user" when action in [:create, :update]
+  plug :require_admin
 
   def index(conn, _params) do
     users = Repo.all(User)
@@ -16,7 +18,6 @@ defmodule Svradmin.UserController do
   end
 
   def create(conn, %{"user" => user_params}) do
-    IO.inspect({"******", user_params})
     changeset = User.changeset(%User{}, user_params)
 
     case Repo.insert(changeset) do
@@ -43,7 +44,6 @@ defmodule Svradmin.UserController do
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Repo.get!(User, id)
     changeset = User.changeset(user, user_params)
-
     case Repo.update(changeset) do
       {:ok, user} ->
         conn

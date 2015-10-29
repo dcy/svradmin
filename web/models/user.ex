@@ -4,11 +4,13 @@ defmodule Svradmin.User do
   schema "users" do
     field :name, :string
     field :password, :string
+    field :cn_name, :string
+    field :is_admin, :integer
 
     timestamps
   end
 
-  @required_fields ~w(name password)
+  @required_fields ~w(name password cn_name is_admin)
   @optional_fields ~w()
 
   @doc """
