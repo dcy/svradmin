@@ -157,8 +157,8 @@ defmodule Svradmin.PageController do
     #end
     what_str = cond do
       type_reload_confs == what -> "热更配置"
-      type_reload_svr == what -> "热更整服"
-      type_reset_svr == what -> "清数据库"
+      type_reload_svr == what -> "热更服务器"
+      type_reset_svr == what -> "重清数据库"
     end
     svr = get_svr(svr_id)
     svr_name = svr.name
