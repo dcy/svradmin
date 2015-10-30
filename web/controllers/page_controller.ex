@@ -24,6 +24,8 @@ defmodule Svradmin.PageController do
   def reload_confs(conn, %{"svr_id" => str_svr_id}) do
     {svr_id, _} = Integer.parse(str_svr_id)
     {result, remark} = case is_svr_live(svr_id) do
+      :ignored ->
+        {"serverNotLive", ""}
       false ->
         {"serverNotLive", ""}
       true -> 
@@ -52,6 +54,8 @@ defmodule Svradmin.PageController do
   def reload_svr(conn, %{"svr_id" => str_svr_id}) do
     {svr_id, _} = Integer.parse(str_svr_id)
     {result, remark} = case is_svr_live(svr_id) do
+      :ignored ->
+        {"serverNotLive", ""}
       false ->
         {"serverNotLive", ""}
       true -> 
