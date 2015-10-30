@@ -140,7 +140,7 @@ defmodule Svradmin.PageController do
   end
 
   defp formated_historys() do
-    historys = Repo.all(from h in History, order_by: [desc: h.inserted_at], limit: 10)
+    historys = Repo.all(from h in History, order_by: [desc: h.inserted_at], limit: 12)
     for history <- historys, do: formate_history(history)
   end
 
