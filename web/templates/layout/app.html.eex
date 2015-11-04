@@ -195,8 +195,10 @@
     <script src="//cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="//cdn.bootcss.com/vex-js/2.3.2/js/vex.combined.min.js"></script>
     <script>vex.defaultOptions.className = 'vex-theme-os';</script>
+    <script src="//cdn.bootcss.com/avalon.js/1.5.4/avalon.min.js"></script>
+    <script>avalon.config({loader: false})</script>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
-    <!-- <script src="<%= static_path(@conn, "/js/vendor.js") %>"></script> -->
+    <script src="<%= static_path(@conn, "/js/vendor.js") %>"></script>
   </body>
 
 </html>
