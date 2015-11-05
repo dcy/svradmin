@@ -6,7 +6,10 @@ var model = avalon.define({
     $id: "version_detail",
     all_issues: [],
     issues: [],
-    issues_amount: 0
+    issues_amount: 0,
+    to_add: function() {
+        location.href = "/issues/new?version_id=" + version_id
+    }
 })
 
 $.get("/version_issues/" + version_id,

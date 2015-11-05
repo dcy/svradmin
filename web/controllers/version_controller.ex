@@ -69,15 +69,18 @@ defmodule Svradmin.VersionController do
   def version_issues(conn, %{"id" => id}) do
     issues = Repo.all(from i in Issue, where: i.version_id == ^id)
     formated_issues = for issue <- issues, do: format_issue(issue)
-    json conn, %{:issues => issues} 
+    IO.inspect(formated_issues)
+    json conn, %{:issues => formated_issues} 
   end
 
   defp format_issue(issue) do
     %Issue{title: title, content: content, designer_id: designer_id, is_done_design: is_done_design,
-      frontend_id: frontend_id, backend_id: backend_id} = issue
+      frontend_id: frontend_id, backend_id: backend_id, remark: remark} = issue
     frontend_redmine = format_redmine_state(frontend_id)
     backend_redmine = format_redmine_state(backend_id)
-    
+    %{title: title, content: content, designer_id: designer_id, is_done_design: is_done_design,
+      frontend_state: format_redmine_state(frontend_id), backend_state: format_redmine_state(backend_id),
+      remark: remark}
   end
 
 
@@ -87,11 +90,23 @@ defmodule Svradmin.VersionController do
     url = redmine_host <> "issues/" <> Integer.to_string(redmine_id) <> ".json?include=attachments,journals"
     IO.inspect({"******url", url})
     %HTTPotion.Response{body: body} = HTTPotion.get url
-    datas = Poison.decode!(body)
-    IO.inspect({"*****datas", datas})
-    %{"issue" => issue_datas} = datas
-    %{"journals" => journals} = issue_datas
-    IO.inspect({"*****journals", journals})
+    case body do
+      "" ->
+        %{:user_name=>"", :status_id=>"", :status_name=>""}
+      _ ->
+        datas = Poison.decode!(body)
+        IO.inspect({"*****datas", datas})
+        %{"issue" => issue_datas} = datas
+        %{"journals" => journals} = issue_datas
+        [first_journal | _] = journals
+        #IO.inspect(first_journal)
+        user_name = first_journal["user"]["name"]
+        IO.inspect({"***", user_name})
+        status_name = issue_datas["status"]["name"]
+        status_id = issue_datas["status"]["id"]
+        url = redmine_host <> "/issues/" <> Integer.to_string(redmine_id)
+        %{url: url, user_name: user_name, status_id: status_id, status_name: status_name}
+    end
     
     
   end

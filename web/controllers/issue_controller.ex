@@ -10,7 +10,7 @@ defmodule Svradmin.IssueController do
     render(conn, "index.html", issues: issues)
   end
 
-  def new(conn, _params) do
+  def new(conn, %{"version_id" => version_id}) do
     changeset = Issue.changeset(%Issue{})
     render(conn, "new.html", changeset: changeset)
   end
