@@ -1,0 +1,80 @@
+<!-- 
+<h2>Listing versions</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Start</th>
+      <th>End</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for version <- @versions do %>
+    <tr>
+      <td><%= version.name %></td>
+      <td><%= version.start %></td>
+      <td><%= version.end %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: version_path(@conn, :show, version), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: version_path(@conn, :edit, version), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: version_path(@conn, :delete, version), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New version", to: version_path(@conn, :new) %>
+-->
+
+<section class="content-header">
+  <h1>
+    <i class="fa fa-tasks"></i>版本计划
+    <small>轩意</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-tasks"></i> Home</a></li>
+    <li class="active">版本计划</li>
+  </ol>
+</section>
+
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">版本计划列表<span class="badge"><%= length(@versions) %></span></h3>
+        </div>
+        <div class="box-body table-responsive no-padding">
+          <table class="table table-hover">
+            <tr>
+              <th>版本名字</th>
+              <th>开始时间</th>
+              <th>结束时间</th>
+              <th>操作选项</th>
+            </tr>
+            <%= for version <- @versions do %>
+              <tr>
+                <td><span class="badge"><%= version.name %></span></td>
+                <td><%= version.start %></td>
+                <td><%= version.end %></td>
+                <td>
+                  <!-- <button class="btn btn-default btn-xs" version-id=<%= version.id %> data-loading-text="<i class='fa fa-spinner fa-pulse'></i>热更中"><i class="fa fa-bars"></i>详情</button> -->
+                  <%= link raw("<i class='fa fa-bars'></i>详情"), to: version_path(@conn, :show, version), class: "btn btn-default btn-xs" %>
+                  <%= link raw("<i class='fa fa-edit'></i>编辑"), to: version_path(@conn, :edit, version), class: "btn btn-warning btn-xs" %>
+                  <!-- <button class="btn btn-warning btn-xs reload_svr" version-id=<%= version.id %> data-loading-text="<i class='fa fa-spinner fa-pulse'></i>热更中"><i class="fa fa-edit"></i>编辑</button> -->
+                  <button class="btn btn-danger btn-xs reset_svr" version-id=<%= version.id %> data-loading-text="<i class='fa fa-spinner fa-pulse'></i>清除中"><i class="fa fa-trash"></i>删除</button>
+                </td>
+              </tr>
+            <% end %>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>

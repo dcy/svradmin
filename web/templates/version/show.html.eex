@@ -1,0 +1,89 @@
+<!--
+<h2>Show version</h2>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @version.name %>
+  </li>
+
+  <li>
+    <strong>Start:</strong>
+    <%= @version.start %>
+  </li>
+
+  <li>
+    <strong>End:</strong>
+    <%= @version.end %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: version_path(@conn, :edit, @version) %>
+<%= link "Back", to: version_path(@conn, :index) %>
+-->
+
+<div ms-controller="version_detail">
+  <section class="content-header">
+    <div id="data" data-version_id=<%= @version.id %> ></div>
+    <h1>
+      <i class="fa fa-tasks"></i>版本详情
+      <button type="button" ms-click="to_add" class="btn btn-xs btn-default"><i class="fa fa-plus">添加任务</i></button>
+    </h1>
+    <ol class="breadcrumb">
+      <li><a href="#"><i class="fa fa-tasks"></i> Home</a></li>
+      <li class="active">版本详情</li>
+    </ol>
+  </section>
+
+  <section class="content">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="box">
+          <div class="box-header">
+            <h3 class="box-title">任务列表<span class="badge bg-green">{{ issues_amount }}</span></h3>
+            <!-- <div class="box-tools">
+              <select id="platform" ms-duplex="platform" data-placeholder="可选择一个平台" class="basic-select2" style="width: 130px;">
+                <option value="all">全部平台</option>
+                <option ms-attr-value=[[platform.value]] ms-repeat-platform="platforms">[[ platform.name ]]</option>
+              </select>
+              <select id="channel" ms-duplex="channel" data-placeholder="可选择一个渠道" class="basic-select2" style="width: 130px;">
+                <option value="all">全部渠道</option>
+                <option ms-attr-value=[[channel.id]] ms-repeat-channel="channels">[[ channel.name ]]-[[channel.tag]]</option>
+              </select>
+            </div> -->
+          </div><!-- /.box-header -->
+          <div class="box-body table-responsive no-padding">
+            <table class="table table-hover">
+              <tr>
+                <th>任务id</th>
+                <th>标题</th>
+                <th>内容</th>
+                <th>策划</th>
+                <th>策划案</th>
+                <th>后端</th>
+                <th>前端</th>
+                <th>操作选项</th>
+              </tr>
+              <tr ms-repeat-issue="issues">
+                <td>{{ issue.id }}</td>
+                <td>{{ issue.title }}</td>
+                <td>{{ issue.content }}</td>
+                <td>{{ issue.backend_name }}</td>
+                <td>{{ issue.frontend_name }}</td>
+                <td>
+                  <button type="button" ms-click="show_detail(serverlist)" class="btn btn-default btn-xs"><i class="fa fa-bars"></i>详情</button>
+                  <button type="button" ms-click="to_edit(serverlist)" class="btn btn-warning btn-xs"><i class="fa fa-edit"></i>修改</button>
+                  <button type="button" ms-click="del_serverlist(serverlist, $remove)" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i>删除</button>
+                </td>
+              </tr>
+            </table>
+          </div><!-- /.box-body -->
+        </div><!-- /.box -->
+      </div>
+    </div>
+  </section><!-- /.content -->
+</div>
+
+

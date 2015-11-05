@@ -1,0 +1,48 @@
+<h2>Show issue</h2>
+
+<ul>
+
+  <li>
+    <strong>Version:</strong>
+    <%= @issue.version_id %>
+  </li>
+
+  <li>
+    <strong>Title:</strong>
+    <%= @issue.title %>
+  </li>
+
+  <li>
+    <strong>Content:</strong>
+    <%= @issue.content %>
+  </li>
+
+  <li>
+    <strong>Designer:</strong>
+    <%= @issue.designer_id %>
+  </li>
+
+  <li>
+    <strong>Is done design:</strong>
+    <%= @issue.is_done_design %>
+  </li>
+
+  <li>
+    <strong>Frontend:</strong>
+    <%= @issue.frontend_id %>
+  </li>
+
+  <li>
+    <strong>Backend:</strong>
+    <%= @issue.backend_id %>
+  </li>
+
+  <li>
+    <strong>Remark:</strong>
+    <%= @issue.remark %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: issue_path(@conn, :edit, @issue) %>
+<%= link "Back", to: issue_path(@conn, :index) %>

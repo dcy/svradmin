@@ -1,0 +1,40 @@
+<h2>Listing issues</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Version</th>
+      <th>Title</th>
+      <th>Content</th>
+      <th>Designer</th>
+      <th>Is done design</th>
+      <th>Frontend</th>
+      <th>Backend</th>
+      <th>Remark</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for issue <- @issues do %>
+    <tr>
+      <td><%= issue.version_id %></td>
+      <td><%= issue.title %></td>
+      <td><%= issue.content %></td>
+      <td><%= issue.designer_id %></td>
+      <td><%= issue.is_done_design %></td>
+      <td><%= issue.frontend_id %></td>
+      <td><%= issue.backend_id %></td>
+      <td><%= issue.remark %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: issue_path(@conn, :show, issue), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: issue_path(@conn, :edit, issue), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: issue_path(@conn, :delete, issue), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New issue", to: issue_path(@conn, :new) %>

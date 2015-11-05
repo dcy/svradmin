@@ -121,8 +121,17 @@
                 <i class="fa fa-gamepad"></i> <span>服务器管理</span> <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="#"><i class="fa fa-circle-o"></i> 服务器列表</a></li>
-                <li class=""><a href="#"><i class="fa fa-circle-o"></i> 操作历史</a></li>
+                <li><a href="/"><i class="fa fa-circle-o"></i> 服务器列表</a></li>
+                <li class=""><a href="/"><i class="fa fa-circle-o"></i> 操作历史</a></li>
+              </ul>
+            </li>
+            <li class="treeview">
+              <a href="#">
+                <i class="fa fa-tasks"></i> <span>版本计划</span> <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="/versions"><i class="fa fa-circle-o"></i> 计划列表</a></li>
+                <li class=""><a href="#"><i class="fa fa-circle-o"></i> 新增任务</a></li>
               </ul>
             </li>
             <li class="header">LABELS</li>
@@ -199,6 +208,11 @@
     <script>avalon.config({loader: false})</script>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
     <script src="<%= static_path(@conn, "/js/vendor.js") %>"></script>
+    <script>
+<%= for app <- @apps do %>
+  require('web/static/js/<%= app %>')
+<% end %>
+    </script>
   </body>
 
 </html>
