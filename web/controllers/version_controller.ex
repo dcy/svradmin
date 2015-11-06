@@ -3,6 +3,7 @@ defmodule Svradmin.VersionController do
 
   alias Svradmin.Version
   alias Svradmin.Issue
+  alias Svradmin.User
 
   plug :scrub_params, "version" when action in [:create, :update]
 
@@ -73,14 +74,23 @@ defmodule Svradmin.VersionController do
     json conn, %{:issues => formated_issues} 
   end
 
+  defp get_designer_state_name(state_id) do
+    designer_states = Util.get_conf(:designer_states)
+    state = Util.mapskeyfind(state_id, :value, designer_states)
+    state.name
+  end
+
   defp format_issue(issue) do
     %Issue{title: title, content: content, designer_id: designer_id, is_done_design: is_done_design,
       frontend_id: frontend_id, backend_id: backend_id, remark: remark} = issue
+    designer = Repo.get!(User, designer_id)
+    designer_name = designer.cn_name
+    designer_state_name = get_designer_state_name(is_done_design)
     frontend_redmine = format_redmine_state(frontend_id)
     backend_redmine = format_redmine_state(backend_id)
-    %{title: title, content: content, designer_id: designer_id, is_done_design: is_done_design,
-      frontend_state: format_redmine_state(frontend_id), backend_state: format_redmine_state(backend_id),
-      remark: remark}
+    %{title: title, content: content, designer_name: designer_name,
+      designer_state_name: designer_state_name, frontend_state: format_redmine_state(frontend_id),
+      backend_state: format_redmine_state(backend_id), remark: remark}
   end
 
 
@@ -88,27 +98,71 @@ defmodule Svradmin.VersionController do
     svr_conf = Application.get_env(:svradmin, :svr_conf)
     redmine_host = Keyword.get(svr_conf, :redmine_host, [])
     url = redmine_host <> "issues/" <> Integer.to_string(redmine_id) <> ".json?include=attachments,journals"
-    IO.inspect({"******url", url})
     %HTTPotion.Response{body: body} = HTTPotion.get url
+    IO.inspect({"***body", body})
     case body do
-      "" ->
-        %{:user_name=>"", :status_id=>"", :status_name=>""}
+      " " ->
+        %{:url=>"", :developer_name=>"", :status_id=>"", :status_name=>""}
       _ ->
         datas = Poison.decode!(body)
-        IO.inspect({"*****datas", datas})
         %{"issue" => issue_datas} = datas
+        assign_to_id = issue_datas["assigned_to"]["id"]
+        assign_to_name = issue_datas["assigned_to"]["name"]
         %{"journals" => journals} = issue_datas
-        [first_journal | _] = journals
-        #IO.inspect(first_journal)
-        user_name = first_journal["user"]["name"]
-        IO.inspect({"***", user_name})
+        journal_users = for j <- journals, do: %{id: j["user"]["id"], name: j["user"]["name"]}
+        users = [%{id: assign_to_id, name: assign_to_name} | journal_users]
+        develper_name = find_developer(users)
         status_name = issue_datas["status"]["name"]
         status_id = issue_datas["status"]["id"]
         url = redmine_host <> "/issues/" <> Integer.to_string(redmine_id)
-        %{url: url, user_name: user_name, status_id: status_id, status_name: status_name}
+        %{url: url, developer_name: develper_name, status_id: status_id, status_name: status_name}
     end
-    
-    
   end
+
+  defp find_developer([]) do
+    ""
+  end
+  defp find_developer([user | users]) do
+    %{:id => user_id, :name => user_name} = user
+    svr_conf = Application.get_env(:svradmin, :svr_conf)
+    redmine_host = Keyword.get(svr_conf, :redmine_host, [])
+    developer_role_id = Keyword.get(svr_conf, :developer_role_id, [])
+    url = redmine_host <> "users/" <> Integer.to_string(user_id) <> ".json?include=memberships"
+    %HTTPotion.Response{body: body} = HTTPotion.get url
+    case body do
+      "" ->
+        ""
+      _ ->
+        datas = Poison.decode!(body)
+        memberships = datas["user"]["memberships"]
+        case is_developer_membership(memberships, developer_role_id) do
+          true -> user_name
+          false -> find_developer(users)
+        end
+    end
+  end
+
+  defp is_developer_membership([], _developer_role_id) do
+    false
+  end
+  defp is_developer_membership([membership | memberships], developer_role_id) do
+    roles = membership["roles"]
+    case is_role(roles, developer_role_id) do
+      true -> true
+      false -> is_developer_membership(memberships, developer_role_id)
+    end
+  end
+
+  defp is_role([], _role_id) do
+    false
+  end
+  defp is_role([role | roles], role_id) do
+    case role["id"] == role_id do
+      true -> true
+      false -> is_role(roles, role_id)
+    end
+  end
+
+
 
 end

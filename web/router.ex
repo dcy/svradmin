@@ -24,6 +24,7 @@ defmodule Svradmin.Router do
     get "/login", SessionController, :new
     resources "/users", UserController
     post "/change_password", SessionController, :change_password 
+    get "/get_users", UserController, :get_users
 
     post "/reload_confs", PageController, :reload_confs
     post "/reload_svr", PageController, :reload_svr

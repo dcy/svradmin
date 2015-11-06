@@ -11,10 +11,12 @@
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
     <link href="//cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <link href="//cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
-    <!-- <link href="//cdn.bootcss.com/messenger/1.4.2/css/messenger.css" rel="stylesheet"> -->
-    <!-- <link href="//cdn.bootcss.com/messenger/1.4.2/css/messenger-theme-future.min.css" rel="stylesheet"> -->
+    <link href="//cdn.bootcss.com/messenger/1.4.2/css/messenger.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/messenger/1.4.2/css/messenger-theme-future.min.css" rel="stylesheet">
     <link href="//cdn.bootcss.com/vex-js/2.3.2/css/vex.min.css" rel="stylesheet">
     <link href="//cdn.bootcss.com/vex-js/2.3.2/css/vex-theme-os.min.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/select2/4.0.0/css/select2.min.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css" rel="stylesheet">
 
   </head>
 
@@ -206,6 +208,12 @@
     <script>vex.defaultOptions.className = 'vex-theme-os';</script>
     <script src="//cdn.bootcss.com/avalon.js/1.5.4/avalon.min.js"></script>
     <script>avalon.config({loader: false})</script>
+    <script src="//cdn.bootcss.com/select2/4.0.0/js/select2.min.js"></script>
+    <script src="//cdn.bootcss.com/select2/4.0.0/js/i18n/zh-CN.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap-validator/0.5.3/js/language/zh_CN.min.js"></script>
+    <script src="//cdn.bootcss.com/messenger/1.4.2/js/messenger.min.js"></script>
+    <script src="//cdn.bootcss.com/messenger/1.4.2/js/messenger-theme-future.min.js"></script>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
     <script src="<%= static_path(@conn, "/js/vendor.js") %>"></script>
     <script>

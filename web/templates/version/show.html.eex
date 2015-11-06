@@ -68,16 +68,19 @@
               <tr ms-repeat-issue="issues" class="">
                 <td>{{ issue.title }}</td>
                 <td>{{ issue.content }}</td>
-                <td>{{ issue.designer_id }}</td>
+                <td>
+                  <span class="badge">{{ issue.designer_name }}</span>
+                  <span class="badge bg-yellow">{{ issue.designer_state_name }}</span>
+                </td>
                 <td>
                   <a ms-attr-href="issue.frontend_state.url" target="_blank">
-                    <span class="badge">{{ issue.frontend_state.user_name }}</span>
+                    <span class="badge">{{ issue.frontend_state.developer_name }}</span>
                     <span class="badge bg-green">{{ issue.frontend_state.status_name }}</span>
                   </a>
                 </td>
                 <td>
-                  <a ms-attr-href="issue.frontend_state.url" target="_blank">
-                    <span class="badge">{{ issue.backend_state.user_name }}</span>
+                  <a ms-attr-href="issue.backend_state.url" target="_blank">
+                    <span class="badge">{{ issue.backend_state.developer_name }}</span>
                     <span class="badge bg-green">{{ issue.backend_state.status_name }}</span>
                   </a>
                 </td>

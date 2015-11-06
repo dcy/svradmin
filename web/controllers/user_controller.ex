@@ -65,4 +65,10 @@ defmodule Svradmin.UserController do
     |> put_flash(:info, "User deleted successfully.")
     |> redirect(to: user_path(conn, :index))
   end
+
+  def get_users(conn, _params) do
+    users = Repo.all(User)
+    users1 = for user <- users, do: %{id: user.id, cn_name: user.cn_name}
+    json conn, %{users: users1}
+  end
 end

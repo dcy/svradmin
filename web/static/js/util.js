@@ -91,6 +91,7 @@
 //}
 
 let Util = {
+    csrf_token: $('#_csrf_token').val(),
     get_url_datas(){
         var aQuery = window.location.href.split("?")  //取得Get参数
         var aGET = new Object()
@@ -150,6 +151,10 @@ let Util = {
             vex_alert_error("你所要访问的东西不存在")
             return
         }
+    },
+
+    designer_states() {
+        return [{name: "已完成", value: 1}, {name: "未完成", value: 0}, {name: "不需要", value: -1}]
     }
 }
 export default Util

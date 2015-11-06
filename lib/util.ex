@@ -29,4 +29,9 @@ defmodule Util do
       false -> mapskeyfind(what, key, t)
     end
   end
+
+  def get_conf(key) do
+    svr_conf = Application.get_env(:svradmin, :svr_conf)
+    Keyword.get(svr_conf, key, [])
+  end
 end

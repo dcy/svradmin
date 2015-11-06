@@ -2,8 +2,10 @@ defmodule Svradmin.IssueController do
   use Svradmin.Web, :controller
 
   alias Svradmin.Issue
+  import Svradmin.Auth, only: [require_admin: 2]
 
   plug :scrub_params, "issue" when action in [:create, :update]
+  plug :require_admin
 
   def index(conn, _params) do
     issues = Repo.all(Issue)
@@ -12,19 +14,28 @@ defmodule Svradmin.IssueController do
 
   def new(conn, %{"version_id" => version_id}) do
     changeset = Issue.changeset(%Issue{})
-    render(conn, "new.html", changeset: changeset)
+    render(conn, "new.html", changeset: changeset, version_id: version_id, apps: ["new_issue"])
   end
 
   def create(conn, %{"issue" => issue_params}) do
+    version_id = issue_params["version_id"]
+    IO.inspect({"******", issue_params})
     changeset = Issue.changeset(%Issue{}, issue_params)
 
+    #case Repo.insert(changeset) do
+    #  {:ok, _issue} ->
+    #    conn
+    #    |> put_flash(:info, "Issue created successfully.")
+    #    |> redirect(to: issue_path(conn, :index))
+    #  {:error, changeset} ->
+    #    render(conn, "new.html", changeset: changeset, version_id: version_id)
+    #end
     case Repo.insert(changeset) do
       {:ok, _issue} ->
-        conn
-        |> put_flash(:info, "Issue created successfully.")
-        |> redirect(to: issue_path(conn, :index))
+        json conn, %{:result => "success"}
       {:error, changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        IO.inspect(changeset)
+        json conn, %{:result => "fail"}
     end
   end
 
