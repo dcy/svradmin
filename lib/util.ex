@@ -34,4 +34,12 @@ defmodule Util do
     svr_conf = Application.get_env(:svradmin, :svr_conf)
     Keyword.get(svr_conf, key, [])
   end
+
+  def remove_ecto_struct_keys(map) do
+    Map.drop(map, [:__meta__, :inserted_at, :updated_at])
+  end
+
+
+
+
 end

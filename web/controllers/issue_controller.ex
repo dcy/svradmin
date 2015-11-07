@@ -1,5 +1,6 @@
 defmodule Svradmin.IssueController do
   use Svradmin.Web, :controller
+  import Util
 
   alias Svradmin.Issue
   import Svradmin.Auth, only: [require_admin: 2]
@@ -19,7 +20,6 @@ defmodule Svradmin.IssueController do
 
   def create(conn, %{"issue" => issue_params}) do
     version_id = issue_params["version_id"]
-    IO.inspect({"******", issue_params})
     changeset = Issue.changeset(%Issue{}, issue_params)
 
     #case Repo.insert(changeset) do
@@ -44,10 +44,13 @@ defmodule Svradmin.IssueController do
     render(conn, "show.html", issue: issue)
   end
 
+  #def edit(conn, %{"id" => id}) do
+  #  issue = Repo.get!(Issue, id)
+  #  changeset = Issue.changeset(issue)
+  #  render(conn, "edit.html", issue: issue, changeset: changeset)
+  #end
   def edit(conn, %{"id" => id}) do
-    issue = Repo.get!(Issue, id)
-    changeset = Issue.changeset(issue)
-    render(conn, "edit.html", issue: issue, changeset: changeset)
+    render(conn, "edit.html", issue_id: id, apps: ["edit_issue"])
   end
 
   def update(conn, %{"id" => id, "issue" => issue_params}) do
@@ -75,4 +78,11 @@ defmodule Svradmin.IssueController do
     |> put_flash(:info, "Issue deleted successfully.")
     |> redirect(to: issue_path(conn, :index))
   end
+
+  def get_issue(conn, %{"id" =>id}) do
+    issue = Repo.get!(Issue, id)
+    issue_map = Util.remove_ecto_struct_keys(Map.from_struct(issue))
+    json conn, %{issue: issue_map}
+  end
+
 end

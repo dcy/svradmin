@@ -1,4 +1,5 @@
 import Util from "./util"
+
 var version_id = $('#data').data("version_id") 
 console.log(version_id)
 
@@ -7,6 +8,9 @@ var model = avalon.define({
     all_issues: [],
     issues: [],
     issues_amount: 0,
+    to_edit: function(issue) {
+        location.href = "/issues/" + issue.id + "/edit"
+    },
     to_add: function() {
         location.href = "/issues/new?version_id=" + version_id
     }
@@ -21,7 +25,6 @@ $.get("/version_issues/" + version_id,
           model.issues = issues
           refresh_issues_amount()
       }
-
      )
 
 function refresh_issues_amount() {

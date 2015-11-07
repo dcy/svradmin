@@ -87,7 +87,7 @@
                 <td>{{ issue.remark }}</td>
                 <td>
                   <!-- <button type="button" ms-click="show_detail(serverlist)" class="btn btn-default btn-xs"><i class="fa fa-bars"></i>详情</button> -->
-                  <button type="button" ms-click="to_edit(serverlist)" class="btn btn-warning btn-xs"><i class="fa fa-edit"></i>修改</button>
+                  <button type="button" ms-click="to_edit(issue)" class="btn btn-warning btn-xs"><i class="fa fa-edit"></i>修改</button>
                   <button type="button" ms-click="del_serverlist(serverlist, $remove)" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i>删除</button>
                 </td>
               </tr>
