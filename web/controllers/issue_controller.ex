@@ -72,10 +72,12 @@ defmodule Svradmin.IssueController do
   #  end
   #end
   def update(conn, %{"id" => id, "issue" => issue_params}) do
-    IO.inspect({"***issue_params", issue_params})
+    new_params = case issue_params["remark"] do
+      nil -> %{issue_params | "remark" => ""}
+      _ -> issue_params
+    end
     issue = Repo.get!(Issue, id)
-    IO.inspect({"******issue", issue})
-    changeset = Issue.changeset(issue, issue_params)
+    changeset = Issue.changeset(issue, new_params)
 
     case Repo.update(changeset) do
       {:ok, issue} ->

@@ -72,11 +72,12 @@ $.get("/get_issue/" + issue_id,
          var issue_vals = model.issue.$model
          issue_vals.designer_id = $('#designer_id').val()
          var version_id = $('#version_id').val()
+         console.log("issue_vals", issue_vals)
          issue_vals.version_id = version_id 
-         if (issue_vals.frontend_id.length == 0) {
+         if (issue_vals.frontend_id == null || issue_vals.frontend_id.length == 0) {
              issue_vals.frontend_id = 0
          }
-         if (issue_vals.backend_id.length == 0) {
+         if (issue_vals.backend_id == null || issue_vals.backend_id.length == 0) {
              issue_vals.backend_id = 0
          }
          $.ajax({
