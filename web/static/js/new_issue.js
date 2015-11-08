@@ -3,7 +3,6 @@ import Util from "./util"
 $(".basic-select2").select2()
 
 var version_id = $('#data').data('version_id')
-console.log("**version_id", version_id)
 
 var model = avalon.define({
     $id: "new_issue",
@@ -24,7 +23,6 @@ $.get("/get_users",
 
 
  avalon.ready(function() {
-     console.log("avalon ready")
      $('#issue').bootstrapValidator({
          message: 'This value is not valid',
          feedbackIcons: {
@@ -53,16 +51,6 @@ $.get("/get_users",
                  validators: {
                      notEmpty: {message: '请选择策划案状态'}
                  }
-             },
-             frontend_id: {
-                 validators: {
-                     notEmpty: {message: '请输入redmine的单号'}
-                 }
-             },
-             backend_id: {
-                 validators: {
-                     notEmpty: {message: '请输入redmine的单号'}
-                 }
              }
          }
 
@@ -75,13 +63,18 @@ $.get("/get_users",
          var issue_vals = model.issue.$model
          issue_vals.designer_id = $('#designer_id').val()
          issue_vals.version_id = version_id
-         console.log("issue_vals: ", issue_vals)
+         if (issue_vals.frontend_id.length == 0) {
+             issue_vals.frontend_id = 0
+         }
+         if (issue_vals.backend_id.length == 0) {
+             issue_vals.backend_id = 0
+         }
          $.post("/issues",
                 {issue: issue_vals, _csrf_token: Util.csrf_token},
                 function(data) {
                     if (data.result == "success") {
                         Util.msg_sth("成功添加")
-                        Util.vex_confirm("返回添加", function() {
+                        Util.vex_confirm("添加成功，返回添加", function() {
                             window.location.href = "/issues/new?version_id=" + version_id
                         })
                     }

@@ -19,8 +19,13 @@ defmodule Svradmin.IssueController do
   end
 
   def create(conn, %{"issue" => issue_params}) do
-    version_id = issue_params["version_id"]
-    changeset = Issue.changeset(%Issue{}, issue_params)
+    new_params = case issue_params["remark"] do
+      nil -> %{issue_params | "remark" => ""}
+      _ -> issue_params
+    end
+    
+    version_id = new_params["version_id"]
+    changeset = Issue.changeset(%Issue{}, new_params)
 
     #case Repo.insert(changeset) do
     #  {:ok, _issue} ->
@@ -53,17 +58,30 @@ defmodule Svradmin.IssueController do
     render(conn, "edit.html", issue_id: id, apps: ["edit_issue"])
   end
 
+  #def update(conn, %{"id" => id, "issue" => issue_params}) do
+  #  issue = Repo.get!(Issue, id)
+  #  changeset = Issue.changeset(issue, issue_params)
+
+  #  case Repo.update(changeset) do
+  #    {:ok, issue} ->
+  #      conn
+  #      |> put_flash(:info, "Issue updated successfully.")
+  #      |> redirect(to: issue_path(conn, :show, issue))
+  #    {:error, changeset} ->
+  #      render(conn, "edit.html", issue: issue, changeset: changeset)
+  #  end
+  #end
   def update(conn, %{"id" => id, "issue" => issue_params}) do
+    IO.inspect({"***issue_params", issue_params})
     issue = Repo.get!(Issue, id)
+    IO.inspect({"******issue", issue})
     changeset = Issue.changeset(issue, issue_params)
 
     case Repo.update(changeset) do
       {:ok, issue} ->
-        conn
-        |> put_flash(:info, "Issue updated successfully.")
-        |> redirect(to: issue_path(conn, :show, issue))
+        json conn, %{:result => "success"}
       {:error, changeset} ->
-        render(conn, "edit.html", issue: issue, changeset: changeset)
+        json conn, %{:result => "fail"}
     end
   end
 

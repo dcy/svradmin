@@ -109,28 +109,37 @@ defmodule Svradmin.VersionController do
 
 
   defp format_redmine_state(redmine_id) do
-    svr_conf = Application.get_env(:svradmin, :svr_conf)
-    redmine_host = Keyword.get(svr_conf, :redmine_host, [])
-    url = redmine_host <> "issues/" <> Integer.to_string(redmine_id) <> ".json?include=attachments,journals"
-    %HTTPotion.Response{body: body} = HTTPotion.get url
-    IO.inspect({"***body", body})
-    case body do
-      " " ->
-        %{:url=>"", :developer_name=>"", :status_id=>"", :status_name=>""}
-      _ ->
-        datas = Poison.decode!(body)
-        %{"issue" => issue_datas} = datas
-        assign_to_id = issue_datas["assigned_to"]["id"]
-        assign_to_name = issue_datas["assigned_to"]["name"]
-        %{"journals" => journals} = issue_datas
-        journal_users = for j <- journals, do: %{id: j["user"]["id"], name: j["user"]["name"]}
-        users = [%{id: assign_to_id, name: assign_to_name} | journal_users]
-        develper_name = find_developer(users)
-        status_name = issue_datas["status"]["name"]
-        status_id = issue_datas["status"]["id"]
-        url = redmine_host <> "/issues/" <> Integer.to_string(redmine_id)
-        %{url: url, developer_name: develper_name, status_id: status_id, status_name: status_name}
+    IO.inspect({"redmine_id", redmine_id})
+    case redmine_id == nil or redmine_id == 0 do
+      true ->
+        empty_redmine_state()
+      false ->
+        svr_conf = Application.get_env(:svradmin, :svr_conf)
+        redmine_host = Keyword.get(svr_conf, :redmine_host, [])
+        url = redmine_host <> "issues/" <> Integer.to_string(redmine_id) <> ".json?include=attachments,journals"
+        %HTTPotion.Response{body: body} = HTTPotion.get url
+        case body do
+          " " ->
+            empty_redmine_state()
+          _ ->
+            datas = Poison.decode!(body)
+            %{"issue" => issue_datas} = datas
+            assign_to_id = issue_datas["assigned_to"]["id"]
+            assign_to_name = issue_datas["assigned_to"]["name"]
+            %{"journals" => journals} = issue_datas
+            journal_users = for j <- journals, do: %{id: j["user"]["id"], name: j["user"]["name"]}
+            users = [%{id: assign_to_id, name: assign_to_name} | journal_users]
+            develper_name = find_developer(users)
+            status_name = issue_datas["status"]["name"]
+            status_id = issue_datas["status"]["id"]
+            url = redmine_host <> "/issues/" <> Integer.to_string(redmine_id)
+            %{url: url, developer_name: develper_name, status_id: status_id, status_name: status_name}
+        end
     end
+  end
+
+  defp empty_redmine_state() do
+    %{:url=>"", :developer_name=>"", :status_id=>"", :status_name=>""}
   end
 
   defp find_developer([]) do
