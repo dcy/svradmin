@@ -221,7 +221,7 @@
     <script src="//cdn.bootcss.com/messenger/1.4.2/js/messenger.min.js"></script>
     <script src="//cdn.bootcss.com/messenger/1.4.2/js/messenger-theme-future.min.js"></script>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
-    <script src="<%= static_path(@conn, "/js/vendor.js") %>"></script>
+    <!-- <script src="<%= static_path(@conn, "/js/vendor.js") %>"></script> -->
     <script>
 <%= for app <- @apps do %>
   require('web/static/js/<%= app %>')
