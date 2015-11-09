@@ -36,6 +36,7 @@ defmodule Svradmin.Router do
     resources "/issues", IssueController
     get "/get_versions", VersionController, :get_versions
     get "/get_issue/:id", IssueController, :get_issue
+    get "/newest_version", VersionController, :newest_version
   end
 
   # Other scopes may use custom stacks.

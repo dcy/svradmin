@@ -1,6 +1,17 @@
-<h2>Edit version</h2>
+<section class="content-header">
+  <h1>
+    <i class="fa fa-tasks"></i>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-tasks"></i> 版本任务</a></li>
+    <li class="active"> 修改</li>
+  </ol>
+</section>
+<section class="content">
+  <h2>Edit version</h2>
 
-<%= render "form.html", changeset: @changeset,
-                        action: version_path(@conn, :update, @version) %>
+  <%= render "form.html", changeset: @changeset,
+  action: version_path(@conn, :update, @version) %>
 
-<%= link "Back", to: version_path(@conn, :index) %>
+  <%= link "Back", to: version_path(@conn, :index) %>
+</section>

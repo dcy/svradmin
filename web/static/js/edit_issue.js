@@ -1,13 +1,17 @@
 import Util from "./util"
 
 var issue_id = $('#data').data("issue_id")
+console.log("is_login", Util.is_login)
 
 var model = avalon.define({
     $id: "issue",
     issue: {id: "", version_id: "", title: "", content: "", designer_id: "", is_done_design: "", frontend_id: "", backend_id: "", remark: ""},
     designer_states: Util.designer_states(),
     versions: [],
-    designers: []
+    designers: [],
+    to_show: function() {
+        location.href = "/newest_version"
+    }
 })
 
 $.get("/get_versions",

@@ -39,7 +39,6 @@ defmodule Svradmin.IssueController do
       {:ok, _issue} ->
         json conn, %{:result => "success"}
       {:error, changeset} ->
-        IO.inspect(changeset)
         json conn, %{:result => "fail"}
     end
   end
@@ -87,6 +86,17 @@ defmodule Svradmin.IssueController do
     end
   end
 
+  #def delete(conn, %{"id" => id}) do
+  #  issue = Repo.get!(Issue, id)
+
+  #  # Here we use delete! (with a bang) because we expect
+  #  # it to always work (and if it does not, it will raise).
+  #  Repo.delete!(issue)
+
+  #  conn
+  #  |> put_flash(:info, "Issue deleted successfully.")
+  #  |> redirect(to: issue_path(conn, :index))
+  #end
   def delete(conn, %{"id" => id}) do
     issue = Repo.get!(Issue, id)
 
@@ -94,9 +104,7 @@ defmodule Svradmin.IssueController do
     # it to always work (and if it does not, it will raise).
     Repo.delete!(issue)
 
-    conn
-    |> put_flash(:info, "Issue deleted successfully.")
-    |> redirect(to: issue_path(conn, :index))
+    json conn, %{:result => "success"}
   end
 
   def get_issue(conn, %{"id" =>id}) do

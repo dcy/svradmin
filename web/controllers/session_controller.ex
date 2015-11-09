@@ -6,7 +6,11 @@ defmodule Svradmin.SessionController do
     if conn.assigns[:current_user] do
       conn |> redirect(to: page_path(conn, :index))
     else
-      render conn, "new.html"
+      req_headers = conn.req_headers
+      {"referer", referer} = List.keyfind(req_headers, "referer", 0, {"referer", nil})
+      conn 
+      |> put_session(:login_direct_url, referer)
+      |> render ("new.html")
     end
   end
 
@@ -15,9 +19,16 @@ defmodule Svradmin.SessionController do
     case Svradmin.Auth.login_by_username_and_pass(conn, user, pass, repo:
                                                Repo) do
       {:ok, conn} ->
-        conn
-        |> put_flash(:info, "Welcome back!")
-        |> redirect(to: page_path(conn, :index))
+        login_direct_url = case get_session(conn, :login_direct_url) do
+          nil ->
+            conn
+            |> put_flash(:info, "Welcome back")
+            |> redirect to: page_path(conn, :index)
+          url -> 
+            conn
+            |> put_flash(:info, "Welcome back")
+            |> redirect(external: url)
+        end
       {:error, _reason, conn} ->
         conn
         |> put_flash(:error, "Invalid username/password combination")
@@ -34,11 +45,8 @@ defmodule Svradmin.SessionController do
 
   def change_password(conn, %{"ori_password"=>ori_password, "new_password"=>new_password}) do
     current_user = conn.assigns[:current_user]
-    IO.inspect(current_user)
     if current_user do
       %User{password: password, id: id} = current_user
-      IO.inspect({"password", password})
-      IO.inspect({"ori_password", ori_password})
       result = 
       case password == ori_password do
         false ->

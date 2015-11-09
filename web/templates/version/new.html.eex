@@ -1,6 +1,19 @@
+<section class="content-header">
+  <h1>
+    <i class="fa fa-tasks"></i>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-tasks"></i> 版本计划</a></li>
+    <li class="active"> 添加</li>
+  </ol>
+</section>
+
+
+<section class="content">
 <h2>New version</h2>
 
 <%= render "form.html", changeset: @changeset,
                         action: version_path(@conn, :create) %>
 
 <%= link "Back", to: version_path(@conn, :index) %>
+</section>

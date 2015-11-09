@@ -4,11 +4,12 @@ defmodule Svradmin.VersionController do
   alias Svradmin.Version
   alias Svradmin.Issue
   alias Svradmin.User
+  alias Svradmin.Router.Helpers
 
   plug :scrub_params, "version" when action in [:create, :update]
 
   def index(conn, _params) do
-    versions = Repo.all(Version)
+    versions = Repo.all(from v in Version, order_by: [desc: v.inserted_at])
     render(conn, "index.html", versions: versions)
   end
 
@@ -74,19 +75,33 @@ defmodule Svradmin.VersionController do
   end
 
   def get_versions(conn, _params) do
-    versions = Repo.all(Version)
-    formated_versions = for version <- versions, do: %{id: version.id, name: version.name}
-    json conn, %{:versions => formated_versions}
+    json conn, %{:versions => get_versions}
+  end
+
+  def newest_version(conn, _params) do
+    versions = get_versions()
+    case versions do
+      [] ->
+        conn
+        |> put_flash(:error, "还没有版本, 新建一个吧")
+        |> redirect(to: Helpers.version_path(conn, :new))
+        |> halt()
+        #redirect conn, to: "/versions/new"
+      _ ->
+        [version | _] = versions
+        version_id = version.id
+        redirect conn, to: "/versions/" <> Integer.to_string(version_id)
+    end
   end
 
 
 
 
 
-
-
-
-
+  defp get_versions() do
+    versions = Repo.all(from v in Version, order_by: [desc: v.inserted_at])
+    for version <- versions, do: %{id: version.id, name: version.name}
+  end
 
   defp get_designer_state_name(state_id) do
     designer_states = Util.get_conf(:designer_states)
@@ -109,7 +124,6 @@ defmodule Svradmin.VersionController do
 
 
   defp format_redmine_state(redmine_id) do
-    IO.inspect({"redmine_id", redmine_id})
     case redmine_id == nil or redmine_id == 0 do
       true ->
         empty_redmine_state()

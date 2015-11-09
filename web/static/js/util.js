@@ -92,6 +92,7 @@
 
 let Util = {
     csrf_token: $('#_csrf_token').val(),
+    is_login: $("#svr-data").data("is_login"),
     get_url_datas(){
         var aQuery = window.location.href.split("?")  //取得Get参数
         var aGET = new Object()
@@ -151,6 +152,10 @@ let Util = {
             vex_alert_error("你所要访问的东西不存在")
             return
         }
+    },
+
+    issue_states() {
+        return [{id: 1, name: "程序完成"}, {id: 2, name: "程序未完"}, {id: 3, name: "已关闭"}]
     },
 
     designer_states() {
