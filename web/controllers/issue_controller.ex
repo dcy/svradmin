@@ -3,10 +3,10 @@ defmodule Svradmin.IssueController do
   import Util
 
   alias Svradmin.Issue
-  import Svradmin.Auth, only: [require_admin: 2]
+  import Svradmin.Auth, only: [authenticate_user: 2]
 
   plug :scrub_params, "issue" when action in [:create, :update]
-  plug :require_admin
+  plug :authenticate_user
 
   def index(conn, _params) do
     issues = Repo.all(Issue)
