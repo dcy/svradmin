@@ -2,10 +2,11 @@ defmodule Svradmin.UserController do
   use Svradmin.Web, :controller
 
   alias Svradmin.User
-  import Svradmin.Auth, only: [require_admin: 2]
+  import Svradmin.Auth
 
   plug :scrub_params, "user" when action in [:create, :update]
-  plug :require_admin
+  plug :authenticate_user 
+  plug :require_admin, "user" when action in [:index, :new, :create, :show, :update, :edit, :delete]
 
   def index(conn, _params) do
     users = Repo.all(User)
