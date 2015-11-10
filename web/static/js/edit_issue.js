@@ -14,17 +14,33 @@ var model = avalon.define({
     }
 })
 
-$.get("/get_versions",
-      function(data) {
-          model.versions = data.versions
-      }
-     )
+//$.get("/get_versions",
+//      function(data) {
+//          model.versions = data.versions
+//      }
+//     )
+$.ajax({
+    type: "GET",
+    url: "/get_versions",
+    async: false,
+    success: function(data) {
+        model.versions = data.versions
+    }
+})
 
-$.get("/get_users",
-      function(data) {
-         model.designers = data.users 
-      }
-     )
+//$.get("/get_users",
+//      function(data) {
+//         model.designers = data.users 
+//      }
+//     )
+$.ajax({
+    type: "GET",
+    url: "/get_users",
+    async: false,
+    success: function(data) {
+        model.designers = data.users
+    }
+})
 
 $.get("/get_issue/" + issue_id,
       function(data) {
