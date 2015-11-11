@@ -61,7 +61,7 @@
                   <span class="badge bg-yellow">{{ issue.designer_state_name }}</span>
                 </td>
                 <td>
-                  <a ms-attr-href="issue.frontend_state.url" target="_blank">
+                  <a ms-attr-href="issue.frontend_state.url" target="_blank" ms-if="issue.frontend_state.developer_name">
                     <span class="badge">{{ issue.frontend_state.developer_name }}</span>
                     <span class="badge bg-green">{{ issue.frontend_state.status_name }}</span>
                     <span ms-if="issue.frontend_state.estimated_days.length == 0" class="badge bg-blue">未估时</span>
@@ -69,7 +69,7 @@
                   </a>
                 </td>
                 <td>
-                  <a ms-attr-href="issue.backend_state.url" target="_blank">
+                  <a ms-attr-href="issue.backend_state.url" target="_blank" ms-if="issue.backend_state.developer_name">
                     <span class="badge">{{ issue.backend_state.developer_name }}</span>
                     <span class="badge bg-green">{{ issue.backend_state.status_name }}</span>
                     <span ms-if="issue.backend_state.estimated_days.length == 0" class="badge bg-blue">未估时</span>

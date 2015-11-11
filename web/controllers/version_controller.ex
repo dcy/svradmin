@@ -155,7 +155,7 @@ defmodule Svradmin.VersionController do
   end
 
   defp empty_redmine_state() do
-    %{:url=>"", :developer_name=>"", :status_id=>"", :status_name=>""}
+    %{:url=>"", :developer_name=>"", :status_id=>"", :status_name=>"", :estimated_days=>""}
   end
 
   defp find_developer([]) do
