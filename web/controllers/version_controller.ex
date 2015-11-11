@@ -68,11 +68,36 @@ defmodule Svradmin.VersionController do
     |> redirect(to: version_path(conn, :index))
   end
 
+  #def version_issues(conn, %{"id" => id}) do
+  #  issues = Repo.all(from i in Issue, where: i.version_id == ^id)
+  #  {_, start, _} = :os.timestamp
+  #  formated_issues = for issue <- issues, do: format_issue(issue)
+  #  {_, endtime, _} = :os.timestamp
+  #  IO.inspect({"****cost secs", endtime - start})
+  #  json conn, %{:issues => formated_issues} 
+  #end
   def version_issues(conn, %{"id" => id}) do
     issues = Repo.all(from i in Issue, where: i.version_id == ^id)
-    formated_issues = for issue <- issues, do: format_issue(issue)
-    json conn, %{:issues => formated_issues} 
+    parent = self
+    for issue <- issues, do: spawn fn -> format_issue(parent, issue) end
+    all_issues = recv([], length(issues))
+    json conn, %{:issues => all_issues} 
   end
+
+  defp recv(issues, amount) do
+    case length(issues) >= amount do
+      true ->
+        Util.mapskeysort(:id, issues)
+      false ->
+        receive do
+          {:issue, issue} ->
+            new_issues = [issue | issues]
+            recv(new_issues, amount)
+        end
+    end
+  end
+          
+        
 
   def get_versions(conn, _params) do
     json conn, %{:versions => get_versions}
@@ -109,7 +134,19 @@ defmodule Svradmin.VersionController do
     state.name
   end
 
-  defp format_issue(issue) do
+  #defp format_issue(issue) do
+  #  %Issue{id: id, title: title, content: content, designer_id: designer_id, is_done_design: is_done_design,
+  #    frontend_id: frontend_id, backend_id: backend_id, remark: remark} = issue
+  #  designer = Repo.get!(User, designer_id)
+  #  designer_name = designer.cn_name
+  #  designer_state_name = get_designer_state_name(is_done_design)
+  #  frontend_redmine = format_redmine_state(frontend_id)
+  #  backend_redmine = format_redmine_state(backend_id)
+  #  %{id: id, title: title, content: content, designer_name: designer_name,
+  #    designer_state_name: designer_state_name, frontend_state: format_redmine_state(frontend_id),
+  #    backend_state: format_redmine_state(backend_id), remark: remark}
+  #end
+  defp format_issue(parent, issue) do
     %Issue{id: id, title: title, content: content, designer_id: designer_id, is_done_design: is_done_design,
       frontend_id: frontend_id, backend_id: backend_id, remark: remark} = issue
     designer = Repo.get!(User, designer_id)
@@ -117,9 +154,10 @@ defmodule Svradmin.VersionController do
     designer_state_name = get_designer_state_name(is_done_design)
     frontend_redmine = format_redmine_state(frontend_id)
     backend_redmine = format_redmine_state(backend_id)
-    %{id: id, title: title, content: content, designer_name: designer_name,
+    formated_issue = %{id: id, title: title, content: content, designer_name: designer_name,
       designer_state_name: designer_state_name, frontend_state: format_redmine_state(frontend_id),
       backend_state: format_redmine_state(backend_id), remark: remark}
+    send parent, {:issue, formated_issue}
   end
 
 

@@ -30,6 +30,12 @@ defmodule Util do
     end
   end
 
+  def mapskeysort(key, map_list) do
+    fun = fn(f_item, b_item) -> Map.get(f_item, key) <= Map.get(b_item, key) end
+    :lists.sort(fun, map_list)
+  end
+
+
   def get_conf(key) do
     svr_conf = Application.get_env(:svradmin, :svr_conf)
     Keyword.get(svr_conf, key, [])
