@@ -54,8 +54,8 @@
                 <th>操作选项</th>
               </tr>
               <tr ms-repeat-issue="issues" class="">
-                <td width="16%">{{ issue.title }}</td>
-                <td width="20%">{{ issue.content }}</td>
+                <td width="12%">{{ issue.title }}</td>
+                <td width="18%">{{ issue.content }}</td>
                 <td>
                   <span class="badge">{{ issue.designer_name }}</span>
                   <span class="badge bg-yellow">{{ issue.designer_state_name }}</span>
@@ -76,7 +76,7 @@
                     <span ms-if="issue.backend_state.estimated_days.length != 0" class="badge bg-blue">{{ issue.backend_state.estimated_days }}天</span>
                   </a>
                 </td>
-                <td width="16%">{{ issue.remark }}</td>
+                <td width="12%">{{ issue.remark }}</td>
                 <td>
                   <!-- <button type="button" ms-click="show_detail(serverlist)" class="btn btn-default btn-xs"><i class="fa fa-bars"></i>详情</button> -->
                   <button type="button" ms-click="to_edit(issue)" class="btn btn-warning btn-xs"><i class="fa fa-edit"></i>修改</button>
