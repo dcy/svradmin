@@ -32,6 +32,10 @@
                 <option value="all">全部程序</option>
                 <option ms-attr-value="developer" ms-repeat-developer="developers">{{ developer }}</option>
               </select>
+              <select id="designer" class="basic-select2" style="width: 120px;">
+                <option value="all">全部策划</option>
+                <option ms-attr-value="designer" ms-repeat-designer="designers">{{ designer }}</option>
+              </select>
               <select id="state" class="basic-select2" style="width: 120px;">
                 <option value="all">全部状态</option>
                 <option ms-attr-value="state.id" ms-repeat-state="states">{{ state.name }}</option>
@@ -60,12 +64,16 @@
                   <a ms-attr-href="issue.frontend_state.url" target="_blank">
                     <span class="badge">{{ issue.frontend_state.developer_name }}</span>
                     <span class="badge bg-green">{{ issue.frontend_state.status_name }}</span>
+                    <span ms-if="issue.frontend_state.estimated_days.length == 0" class="badge bg-blue">未估时</span>
+                    <span ms-if="issue.frontend_state.estimated_days.length != 0" class="badge bg-blue">{{ issue.frontend_state.estimated_days }}天</span>
                   </a>
                 </td>
                 <td>
                   <a ms-attr-href="issue.backend_state.url" target="_blank">
                     <span class="badge">{{ issue.backend_state.developer_name }}</span>
                     <span class="badge bg-green">{{ issue.backend_state.status_name }}</span>
+                    <span ms-if="issue.backend_state.estimated_days.length == 0" class="badge bg-blue">未估时</span>
+                    <span ms-if="issue.backend_state.estimated_days.length != 0" class="badge bg-blue">{{ issue.backend_state.estimated_days }}天</span>
                   </a>
                 </td>
                 <td width="16%">{{ issue.remark }}</td>

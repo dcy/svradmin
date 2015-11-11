@@ -10,6 +10,7 @@ var model = avalon.define({
     issues: [],
     issues_amount: 0,
     developers: [],
+    designers: [],
     states: Util.issue_states(),
     to_edit: function(issue) {
         if (Util.is_login) {
@@ -76,6 +77,7 @@ $.get("/version_issues/" + version_id,
           model.issues = issues
           refresh_issues_amount()
           filter_developers()
+          filter_designers()
           //$('#version_id').val(version_id).trigger("change")
       }
      )
@@ -100,6 +102,18 @@ function filter_developers() {
     model.developers = developers
 }
 
+function filter_designers() {
+    var designers = new Array()
+    for (var i in model.all_issues.$model) {
+        var item = model.all_issues.$model[i]
+        var designer = item.designer_name
+        if (designers.indexOf(designer) == -1) {
+            designers.push(designer)
+        }
+    }
+    model.designers = designers
+}
+
 function refresh_issues_amount() {
     model.issues_amount = model.issues.length
 }
@@ -117,6 +131,7 @@ $("#version_id").on("select2:select", function(e) {
 
 $('#developer').on("select2:select", function(e) {
     $('#state').val("all").trigger("change")
+    $('#designer').val("all").trigger("change")
     var developer = $('#developer').val()
     if (developer == "all") {
         model.issues = model.all_issues
@@ -131,13 +146,34 @@ $('#developer').on("select2:select", function(e) {
                 selected_issues.push(item)
             }
         }
-    model.issues = selected_issues
+        model.issues = selected_issues
+    }
+    refresh_issues_amount()
+})
+
+$('#designer').on("select2:select", function(e) {
+    $('#developer').val("all").trigger("change")
+    $('#state').val("all").trigger("change")
+    var designer = $('#designer').val()
+    if (designer == "all") {
+        model.issues = model.all_issues
+    }
+    else {
+        var selected_issues = new Array()
+        for (var i in model.all_issues.$model) {
+            var item = model.all_issues.$model[i]
+            if (item.designer_name == designer) {
+                selected_issues.push(item)
+            }
+        }
+        model.issues = selected_issues
     }
     refresh_issues_amount()
 })
 
 $('#state').on("select2:select", function(e) {
     $('#developer').val("all").trigger("change")
+    $('#designer').val("all").trigger("change")
     var state = $('#state').val()
     if (state == "all") {
         model.issues = model.all_issues

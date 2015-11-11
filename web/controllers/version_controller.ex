@@ -140,6 +140,7 @@ defmodule Svradmin.VersionController do
             %{"issue" => issue_datas} = datas
             assign_to_id = issue_datas["assigned_to"]["id"]
             assign_to_name = issue_datas["assigned_to"]["name"]
+            estimated_days = Map.get(issue_datas, "estimated_hours", "")
             %{"journals" => journals} = issue_datas
             journal_users = for j <- journals, do: %{id: j["user"]["id"], name: j["user"]["name"]}
             users = [%{id: assign_to_id, name: assign_to_name} | journal_users]
@@ -147,7 +148,8 @@ defmodule Svradmin.VersionController do
             status_name = issue_datas["status"]["name"]
             status_id = issue_datas["status"]["id"]
             url = redmine_host <> "/issues/" <> Integer.to_string(redmine_id)
-            %{url: url, developer_name: develper_name, status_id: status_id, status_name: status_name}
+            %{url: url, developer_name: develper_name, status_id: status_id, status_name: status_name,
+              estimated_days: estimated_days}
         end
     end
   end
