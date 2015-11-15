@@ -82,20 +82,35 @@ $.get("/version_issues/" + version_id,
       }
      )
 
+//function filter_developers() {
+//    var developers = new array()
+//    for (var i in model.all_issues.$model) {
+//        var item = model.all_issues.$model[i]
+//        var frontend_name = item.frontend_state.developer_name
+//        if (frontend_name.length != 0) {
+//            if (developers.indexof(frontend_name) == -1) {
+//                developers.push(frontend_name)
+//            }
+//        }
+//        var backend_name = item.backend_state.developer_name
+//        if (backend_name.length != 0) {
+//            if (developers.indexof(backend_name) == -1) {
+//                developers.push(backend_name)
+//            }
+//        }
+//    }
+//    model.developers = developers
+//}
 function filter_developers() {
     var developers = new Array()
     for (var i in model.all_issues.$model) {
         var item = model.all_issues.$model[i]
-        var frontend_name = item.frontend_state.developer_name
-        if (frontend_name.length != 0) {
-            if (developers.indexOf(frontend_name) == -1) {
-                developers.push(frontend_name)
-            }
-        }
-        var backend_name = item.backend_state.developer_name
-        if (backend_name.length != 0) {
-            if (developers.indexOf(backend_name) == -1) {
-                developers.push(backend_name)
+        var frontend_states = item.frontend_states
+        var all_states = item.frontend_states.concat(item.backend_states)
+        for (var j in all_states) {
+            var state = all_states[j]
+            if (state.developer_name != 0 && developers.indexOf(state.developer_name) == -1) {
+                developers.push(state.developer_name)
             }
         }
     }
@@ -129,6 +144,27 @@ $("#version_id").on("select2:select", function(e) {
   location.href = "/versions/" + version_id
 })
 
+//$('#developer').on("select2:select", function(e) {
+//    $('#state').val("all").trigger("change")
+//    $('#designer').val("all").trigger("change")
+//    var developer = $('#developer').val()
+//    if (developer == "all") {
+//        model.issues = model.all_issues
+//    }
+//    else {
+//        var selected_issues = new Array()
+//        for (var i in model.all_issues.$model) {
+//            var item = model.all_issues.$model[i]
+//            var frontend_name = item.frontend_state.developer_name
+//            var backend_name = item.backend_state.developer_name
+//            if (frontend_name == developer || backend_name == developer) {
+//                selected_issues.push(item)
+//            }
+//        }
+//        model.issues = selected_issues
+//    }
+//    refresh_issues_amount()
+//})
 $('#developer').on("select2:select", function(e) {
     $('#state').val("all").trigger("change")
     $('#designer').val("all").trigger("change")
@@ -140,9 +176,8 @@ $('#developer').on("select2:select", function(e) {
         var selected_issues = new Array()
         for (var i in model.all_issues.$model) {
             var item = model.all_issues.$model[i]
-            var frontend_name = item.frontend_state.developer_name
-            var backend_name = item.backend_state.developer_name
-            if (frontend_name == developer || backend_name == developer) {
+            var all_states = item.frontend_states.concat(item.backend_states)
+            if (Util.has_item(all_states, "developer_name", developer)) {
                 selected_issues.push(item)
             }
         }
@@ -213,16 +248,45 @@ $('#state').on("select2:select", function(e) {
     }
 })
 
+//function is_issue_done(issue) {
+//    var frontend_state = issue.frontend_state
+//    var backend_state = issue.backend_state
+//    return is_state_done(frontend_state.status_name) && is_state_done(backend_state.status_name)
+//}
 function is_issue_done(issue) {
-    var frontend_state = issue.frontend_state
-    var backend_state = issue.backend_state
-    return is_state_done(frontend_state.status_name) && is_state_done(backend_state.status_name)
+    var all_states = issue.frontend_states.concat(issue.backend_states)
+    return is_states_done(all_states)
+    //return is_state_done(frontend_state.status_name) && is_state_done(backend_state.status_name)
 }
 
+function is_states_done(states) {
+    for (var i in states) {
+        var state = states[i]
+        if (!is_state_done(state.status_name)) {
+            return false
+        }
+    }
+    return true
+}
+
+//function is_issue_close(issue) {
+//    var frontend_state = issue.frontend_state
+//    var backend_state = issue.backend_state
+//    return is_state_close(frontend_state.status_name) && is_state_close(backend_state.status_name)
+//}
 function is_issue_close(issue) {
-    var frontend_state = issue.frontend_state
-    var backend_state = issue.backend_state
-    return is_state_close(frontend_state.status_name) && is_state_close(backend_state.status_name)
+    var all_states = issue.frontend_states.concat(issue.backend_states)
+    return is_states_close(all_states)
+}
+
+function is_states_close(states) {
+    for (var i in states) {
+        var state = states[i]
+        if (!is_state_close(state.status_name)) {
+            return false
+        }
+    }
+    return true
 }
 
 function is_state_done(state_name) {

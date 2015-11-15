@@ -20,6 +20,7 @@
     <link href="//cdn.bootcss.com/select2/4.0.0/css/select2.min.css" rel="stylesheet">
     <link href="//cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css" rel="stylesheet">
     <link href="//cdn.bootcss.com/pace/1.0.1/themes/blue/pace-theme-center-atom.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/bootstrap-tagsinput/0.6.1/bootstrap-tagsinput.min.css" rel="stylesheet">
 
   </head>
 
@@ -220,6 +221,7 @@
     <script src="//cdn.bootcss.com/bootstrap-validator/0.5.3/js/language/zh_CN.min.js"></script>
     <script src="//cdn.bootcss.com/messenger/1.4.2/js/messenger.min.js"></script>
     <script src="//cdn.bootcss.com/messenger/1.4.2/js/messenger-theme-future.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap-tagsinput/0.6.1/bootstrap-tagsinput.min.js"></script>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
     <!-- <script src="<%= static_path(@conn, "/js/vendor.js") %>"></script> -->
     <script>

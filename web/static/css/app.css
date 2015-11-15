@@ -3,6 +3,10 @@ body, form, ul{
   margin-bottom: 20px;
 }
 
+.bootstrap-tagsinput {
+  width: 100%;
+}
+
 /* Phoenix flash messages */
 .alert:empty { display: none; }
 

@@ -154,6 +154,16 @@ let Util = {
         }
     },
 
+    has_item(items, key, value) {
+        for (var x in items) {
+            var item = items[x]
+            if (item[key] == value) {
+                return true
+            } 
+        }
+        return false
+    },
+
     issue_states() {
         return [{id: 1, name: "程序完成"}, {id: 2, name: "程序未完"}, {id: 3, name: "已关闭"}]
     },

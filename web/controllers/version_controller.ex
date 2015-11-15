@@ -81,6 +81,7 @@ defmodule Svradmin.VersionController do
     parent = self
     for issue <- issues, do: spawn fn -> format_issue(parent, issue) end
     all_issues = recv([], length(issues))
+    #all_issues = for issue <- issues, do: format_issue(self, issue)
     json conn, %{:issues => all_issues} 
   end
 
@@ -148,27 +149,29 @@ defmodule Svradmin.VersionController do
   #end
   defp format_issue(parent, issue) do
     %Issue{id: id, title: title, content: content, designer_id: designer_id, is_done_design: is_done_design,
-      frontend_id: frontend_id, backend_id: backend_id, remark: remark} = issue
+      frontend_ids: ori_frontend_ids, backend_ids: ori_backend_ids, remark: remark} = issue
+    frontend_ids = String.split(ori_frontend_ids, ",")
+    backend_ids = String.split(ori_backend_ids)
     designer = Repo.get!(User, designer_id)
     designer_name = designer.cn_name
     designer_state_name = get_designer_state_name(is_done_design)
-    frontend_redmine = format_redmine_state(frontend_id)
-    backend_redmine = format_redmine_state(backend_id)
+    frontend_states = for frontend_id <- frontend_ids, do: format_redmine_state(frontend_id)
+    backend_states = for backend_id <- backend_ids, do: format_redmine_state(backend_id)
     formated_issue = %{id: id, title: title, content: content, designer_name: designer_name,
-      designer_state_name: designer_state_name, frontend_state: format_redmine_state(frontend_id),
-      backend_state: format_redmine_state(backend_id), remark: remark}
+      designer_state_name: designer_state_name, frontend_states: frontend_states,
+      backend_states: backend_states, remark: remark}
     send parent, {:issue, formated_issue}
   end
 
 
   defp format_redmine_state(redmine_id) do
-    case redmine_id == nil or redmine_id == 0 do
+    case redmine_id == nil or redmine_id == 0 or redmine_id == "0" do
       true ->
         empty_redmine_state()
       false ->
         svr_conf = Application.get_env(:svradmin, :svr_conf)
         redmine_host = Keyword.get(svr_conf, :redmine_host, [])
-        url = redmine_host <> "issues/" <> Integer.to_string(redmine_id) <> ".json?include=attachments,journals"
+        url = redmine_host <> "issues/" <> redmine_id <> ".json?include=attachments,journals"
         %HTTPotion.Response{body: body} = HTTPotion.get url
         case body do
           " " ->
@@ -185,7 +188,7 @@ defmodule Svradmin.VersionController do
             develper_name = find_developer(users)
             status_name = issue_datas["status"]["name"]
             status_id = issue_datas["status"]["id"]
-            url = redmine_host <> "/issues/" <> Integer.to_string(redmine_id)
+            url = redmine_host <> "/issues/" <> redmine_id
             %{url: url, developer_name: develper_name, status_id: status_id, status_name: status_name,
               estimated_days: estimated_days}
         end

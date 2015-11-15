@@ -5,7 +5,7 @@ console.log("is_login", Util.is_login)
 
 var model = avalon.define({
     $id: "issue",
-    issue: {id: "", version_id: "", title: "", content: "", designer_id: "", is_done_design: "", frontend_id: "", backend_id: "", remark: ""},
+    issue: {id: "", version_id: "", title: "", content: "", designer_id: "", is_done_design: "", frontend_ids: "", backend_ids: "", remark: ""},
     designer_states: Util.designer_states(),
     versions: [],
     designers: [],
@@ -13,6 +13,11 @@ var model = avalon.define({
         location.href = "/newest_version"
     }
 })
+
+$("input[name='frontend_ids']").tagsinput({
+});
+$("input[name='backend_ids']").tagsinput({
+});
 
 //$.get("/get_versions",
 //      function(data) {
@@ -44,15 +49,25 @@ $.ajax({
 
 $.get("/get_issue/" + issue_id,
       function(data) {
+          console.log("data.issue", data.issue)
           model.issue = data.issue
           $('#designer_id').val(model.issue.designer_id).trigger("change")
           $('#version_id').val(model.issue.version_id).trigger("change")
+          $("input[name='frontend_ids']").tagsinput('add', data.issue.frontend_ids)
+          $("input[name='backend_ids']").tagsinput('add', data.issue.backend_ids)
       }
      )
 
 
  avalon.ready(function() {
-     $('#issue').bootstrapValidator({
+     $('#issue')
+     .find('[name="frontend_ids"]').change(function(e) {
+         $('#issue').bootstrapValidator('revalidateField', 'frontend_ids');
+     }).end()
+     .find('[name="backend_ids"]').change(function(e) {
+         $('#issue').bootstrapValidator('revalidateField', 'backend_ids');
+     }).end()
+     .bootstrapValidator({
          message: 'This value is not valid',
          feedbackIcons: {
              valid: 'glyphicon glyphicon-ok',
@@ -80,6 +95,16 @@ $.get("/get_issue/" + issue_id,
                  validators: {
                      notEmpty: {message: '请选择策划案状态'}
                  }
+             },
+             frontend_ids: {
+                 validators: {
+                     regexp: {regexp: "^[0-9\,]+$", message: '只能是数字和","'}
+                 }
+             },
+             backend_ids: {
+                 validators: {
+                     regexp: {regexp: "^[0-9\,]+$", message: '只能是数字和","'}
+                 }
              }
          }
 
@@ -94,12 +119,6 @@ $.get("/get_issue/" + issue_id,
          var version_id = $('#version_id').val()
          console.log("issue_vals", issue_vals)
          issue_vals.version_id = version_id 
-         if (issue_vals.frontend_id == null || issue_vals.frontend_id.length == 0) {
-             issue_vals.frontend_id = 0
-         }
-         if (issue_vals.backend_id == null || issue_vals.backend_id.length == 0) {
-             issue_vals.backend_id = 0
-         }
          $.ajax({
              type: "put",
              url: "/issues/" + issue_id,

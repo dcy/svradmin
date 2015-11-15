@@ -61,20 +61,39 @@
                   <span class="badge bg-yellow">{{ issue.designer_state_name }}</span>
                 </td>
                 <td>
-                  <a ms-attr-href="issue.frontend_state.url" target="_blank" ms-if="issue.frontend_state.developer_name">
-                    <span class="badge">{{ issue.frontend_state.developer_name }}</span>
-                    <span class="badge bg-green">{{ issue.frontend_state.status_name }}</span>
-                    <span ms-if="issue.frontend_state.estimated_days.length == 0" class="badge bg-blue">未估时</span>
-                    <span ms-if="issue.frontend_state.estimated_days.length != 0" class="badge bg-blue">{{ issue.frontend_state.estimated_days }}天</span>
-                  </a>
+                  <span ms-repeat-frontend_state="issue.frontend_states">
+                    <a ms-attr-href="frontend_state.url" target="_blank" ms-if="frontend_state.developer_name.length != 0">
+                    <span class="badge">{{ frontend_state.developer_name }}</span>
+                    <span class="badge bg-green">{{ frontend_state.status_name }}</span>
+                    <span ms-if="frontend_state.estimated_days.length == 0" class="badge bg-blue">未估时</span>
+                    <span ms-if="frontend_state.estimated_days.length != 0" class="badge bg-blue">{{ frontend_state.estimated_days }}天</span>
+
+                    </a>
+                    <br />
+                  </span>
+                  <!-- <a ms-attr-href="frontend_state.url" target="_blank" ms-repeat-frontend_state="issue.frontend_states">
+                    <span class="badge">{{ frontend_state.developer_name }}</span>
+                    <span class="badge bg-green">{{ frontend_state.status_name }}</span>
+                    <span ms-if="frontend_state.developer_name.length !=0 && frontend_state.estimated_days.length == 0" class="badge bg-blue">未估时</span>
+                    <span ms-if="frontend_state.developer_name.length !=0 && frontend_state.estimated_days.length != 0" class="badge bg-blue">{{ frontend_state.estimated_days }}天</span>
+                  </a> -->
                 </td>
                 <td>
-                  <a ms-attr-href="issue.backend_state.url" target="_blank" ms-if="issue.backend_state.developer_name">
-                    <span class="badge">{{ issue.backend_state.developer_name }}</span>
-                    <span class="badge bg-green">{{ issue.backend_state.status_name }}</span>
-                    <span ms-if="issue.backend_state.estimated_days.length == 0" class="badge bg-blue">未估时</span>
-                    <span ms-if="issue.backend_state.estimated_days.length != 0" class="badge bg-blue">{{ issue.backend_state.estimated_days }}天</span>
-                  </a>
+                  <span ms-repeat-backend_state="issue.backend_states">
+                    <a ms-attr-href="backend_state.url" target="_blank" ms-if="backend_state.developer_name.length != 0">
+                      <span class="badge">{{ backend_state.developer_name }}</span>
+                      <span class="badge bg-green">{{ backend_state.status_name }}</span>
+                      <span ms-if="backend_state.estimated_days.length == 0" class="badge bg-blue">未估时</span>
+                      <span ms-if="backend_state.estimated_days.length != 0" class="badge bg-blue">{{ backend_state.estimated_days }}天</span>
+                    </a>
+                    <br />
+                  </span>
+                  <!-- <a ms-attr-href="backend_state.url" target="_blank" ms-repeat-backend_state="issue.backend_states" >
+                    <span class="badge">{{ backend_state.developer_name }}</span>
+                    <span class="badge bg-green">{{ backend_state.status_name }}</span>
+                    <span ms-if="backend_state.estimated_days.length == 0" class="badge bg-blue">未估时</span>
+                    <span ms-if="backend_state.estimated_days.length != 0" class="badge bg-blue">{{ backend_state.estimated_days }}天</span>
+                  </a> -->
                 </td>
                 <td width="12%">{{ issue.remark }}</td>
                 <td>

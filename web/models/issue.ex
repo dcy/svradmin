@@ -7,14 +7,15 @@ defmodule Svradmin.Issue do
     field :content, :string
     field :designer_id, :integer
     field :is_done_design, :integer
-    field :frontend_id, :integer
-    field :backend_id, :integer
+    field :designer_infos, :string
+    field :frontend_ids, :string
+    field :backend_ids, :string
     field :remark, :string
 
     timestamps
   end
 
-  @required_fields ~w(version_id title content designer_id is_done_design frontend_id backend_id remark)
+  @required_fields ~w(version_id title content designer_id is_done_design designer_infos frontend_ids backend_ids remark)
   @optional_fields ~w()
 
   @doc """
