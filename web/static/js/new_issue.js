@@ -6,7 +6,7 @@ var version_id = $('#data').data('version_id')
 
 var model = avalon.define({
     $id: "new_issue",
-    issue: {title: "", content: "", designer_id: "", is_done_design: "", frontend_id: "", backend_id: "", remark: ""},
+    issue: {title: "", content: "", designer_id: "", is_done_design: "", designer_infos: [], frontend_ids: "", backend_ids: "", remark: ""},
     designer_states: Util.designer_states(),
     to_show: function() {
         location.href = "/versions/" + version_id
@@ -23,7 +23,14 @@ $.get("/get_users",
 
 
  avalon.ready(function() {
-     $('#issue').bootstrapValidator({
+     $('#issue')
+     .find('[name="frontend_ids"]').change(function(e) {
+         $('#issue').bootstrapValidator('revalidateField', 'frontend_ids');
+     }).end()
+     .find('[name="backend_ids"]').change(function(e) {
+         $('#issue').bootstrapValidator('revalidateField', 'backend_ids');
+     }).end()
+     .bootstrapValidator({
          message: 'This value is not valid',
          feedbackIcons: {
              valid: 'glyphicon glyphicon-ok',
@@ -51,6 +58,16 @@ $.get("/get_users",
                  validators: {
                      notEmpty: {message: '请选择策划案状态'}
                  }
+             },
+             frontend_ids: {
+                 validators: {
+                     regexp: {regexp: "^[0-9\,]+$", message: '只能是数字'}
+                 }
+             },
+             backend_ids: {
+                 validators: {
+                     regexp: {regexp: "^[0-9\,]+$", message: '只能是数字'}
+                 }
              }
          }
 
@@ -63,12 +80,7 @@ $.get("/get_users",
          var issue_vals = model.issue.$model
          issue_vals.designer_id = $('#designer_id').val()
          issue_vals.version_id = version_id
-         if (issue_vals.frontend_id.length == 0) {
-             issue_vals.frontend_id = 0
-         }
-         if (issue_vals.backend_id.length == 0) {
-             issue_vals.backend_id = 0
-         }
+         console.log("***issue_vals", issue_vals)
          $.post("/issues",
                 {issue: issue_vals, _csrf_token: Util.csrf_token},
                 function(data) {

@@ -98,12 +98,12 @@ $.get("/get_issue/" + issue_id,
              },
              frontend_ids: {
                  validators: {
-                     regexp: {regexp: "^[0-9\,]+$", message: '只能是数字和","'}
+                     regexp: {regexp: "^[0-9\,]+$", message: '只能是数字'}
                  }
              },
              backend_ids: {
                  validators: {
-                     regexp: {regexp: "^[0-9\,]+$", message: '只能是数字和","'}
+                     regexp: {regexp: "^[0-9\,]+$", message: '只能是数字'}
                  }
              }
          }

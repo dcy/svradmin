@@ -1,12 +1,3 @@
-<!--
-<h2>New issue</h2>
-
-<%= render "form.html", changeset: @changeset,
-                        action: issue_path(@conn, :create) %>
-
-<%= link "Back", to: issue_path(@conn, :index) %>
--->
-
 <div ms-controller="new_issue">
   <section class="content-header">
     <div id="data" data-version_id=<%= @version_id %> ></div>
@@ -58,15 +49,17 @@
                 </div>
               </div>
               <div class="form-group">
-                <label for="frontend_id" class="col-xs-3 control-label">前端redmine单号</label>
+                <label for="frontend_ids" class="col-xs-3 control-label">前端redmine单号</label>
                 <div class="col-xs-6">
-                  <input type="number" ms-duplex="issue.frontend_id" class="form-control" id="frontend_id" name="frontend_id">
+                  <!-- <input type="number" ms-duplex="issue.frontend_id" class="form-control" id="frontend_id" name="frontend_id"> -->
+                  <input type="text" ms-duplex="issue.frontend_ids" data-role="tagsinput" class="form-control" name="frontend_ids">
                 </div>
               </div>
               <div class="form-group">
-                <label for="backend_id" class="col-xs-3 control-label">后端redmine单号</label>
+                <label for="backend_ids" class="col-xs-3 control-label">后端redmine单号</label>
                 <div class="col-xs-6">
-                  <input type="number" ms-duplex="issue.backend_id" class="form-control" id="backend_id" name="backend_id">
+                  <!-- <input type="number" ms-duplex="issue.backend_id" class="form-control" id="backend_id" name="backend_id"> -->
+                  <input type="text" ms-duplex="issue.backend_ids" data-role="tagsinput" class="form-control" name="backend_ids">
                 </div>
               </div>
               <div class="form-group">

@@ -1,6 +1,7 @@
 defmodule Svradmin.IssueController do
   use Svradmin.Web, :controller
   import Util
+  require Logger
 
   alias Svradmin.Issue
   import Svradmin.Auth, only: [authenticate_user: 2]
@@ -19,9 +20,14 @@ defmodule Svradmin.IssueController do
   end
 
   def create(conn, %{"issue" => issue_params}) do
-    new_params = case issue_params["remark"] do
-      nil -> %{issue_params | "remark" => ""}
-      _ -> issue_params
+    #new_params = case issue_params["remark"] do
+    #  nil -> %{issue_params | "remark" => ""}
+    #  _ -> issue_params
+    #end
+    new_params = remove_maps_nil(issue_params)
+    new_params = case new_params["designer_infos"] do
+      nil -> Map.put(new_params, "designer_infos", "[]")
+      designer_infos -> %{new_params | "designer_infos" => Poison.encode!(designer_infos)}
     end
     
     version_id = new_params["version_id"]
@@ -39,6 +45,8 @@ defmodule Svradmin.IssueController do
       {:ok, _issue} ->
         json conn, %{:result => "success"}
       {:error, changeset} ->
+        errors = :io_lib.format("~p", [changeset.errors])
+        Logger.error "Create issue's error #{errors}"
         json conn, %{:result => "fail"}
     end
   end
@@ -71,15 +79,15 @@ defmodule Svradmin.IssueController do
   #  end
   #end
   def update(conn, %{"id" => id, "issue" => issue_params}) do
-    IO.inspect({"******issue_params", issue_params})
-    new_params = case issue_params["remark"] do
-      nil -> %{issue_params | "remark" => ""}
-      _ -> issue_params
-    end
-    new_params = case issue_params["designer_infos"] do
-      nil -> %{new_params | "designer_infos" => "[]"}
-      _ -> new_params
-    end
+    #new_params = case issue_params["remark"] do
+    #  nil -> %{issue_params | "remark" => ""}
+    #  _ -> issue_params
+    #end
+    #new_params = case issue_params["designer_infos"] do
+    #  nil -> %{new_params | "designer_infos" => "[]"}
+    #  _ -> new_params
+    #end
+    new_params = Util.remove_maps_nil(issue_params)
     issue = Repo.get!(Issue, id)
     changeset = Issue.changeset(issue, new_params)
 
@@ -87,7 +95,8 @@ defmodule Svradmin.IssueController do
       {:ok, issue} ->
         json conn, %{:result => "success"}
       {:error, changeset} ->
-        IO.inspect({"******error", changeset})
+        errors = :io_lib.format("~p", [changeset.errors])
+        Logger.error "Create issue's error #{errors}"
         json conn, %{:result => "fail"}
     end
   end

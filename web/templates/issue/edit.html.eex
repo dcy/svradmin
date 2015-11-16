@@ -58,7 +58,7 @@
                 </div>
               </div>
               <div class="form-group">
-                <label for="frontend_id" class="col-xs-3 control-label">前端redmine单号</label>
+                <label for="frontend_ids" class="col-xs-3 control-label">前端redmine单号</label>
                 <div class="col-xs-6">
                   <!-- <input type="number" ms-duplex="issue.frontend_id" class="form-control" id="frontend_id" name="frontend_id"> -->
                   <input type="text" ms-duplex="issue.frontend_ids" data-role="tagsinput" class="form-control" name="frontend_ids">

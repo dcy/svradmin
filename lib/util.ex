@@ -45,6 +45,16 @@ defmodule Util do
     Map.drop(map, [:__meta__, :inserted_at, :updated_at])
   end
 
+  def remove_maps_nil(map) do
+    lists = Enum.map(map, fn {k, v} ->
+      new_v = case v do
+        nil -> ""
+        _ -> v
+      end
+      {k, new_v} end)
+    Enum.into(lists, %{})
+  end
+
 
 
 

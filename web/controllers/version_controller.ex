@@ -151,7 +151,7 @@ defmodule Svradmin.VersionController do
     %Issue{id: id, title: title, content: content, designer_id: designer_id, is_done_design: is_done_design,
       frontend_ids: ori_frontend_ids, backend_ids: ori_backend_ids, remark: remark} = issue
     frontend_ids = String.split(ori_frontend_ids, ",")
-    backend_ids = String.split(ori_backend_ids)
+    backend_ids = String.split(ori_backend_ids, ",")
     designer = Repo.get!(User, designer_id)
     designer_name = designer.cn_name
     designer_state_name = get_designer_state_name(is_done_design)
@@ -165,7 +165,7 @@ defmodule Svradmin.VersionController do
 
 
   defp format_redmine_state(redmine_id) do
-    case redmine_id == nil or redmine_id == 0 or redmine_id == "0" do
+    case redmine_id == nil or redmine_id == 0 or redmine_id == "0" or redmine_id == "" do
       true ->
         empty_redmine_state()
       false ->

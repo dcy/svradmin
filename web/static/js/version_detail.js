@@ -73,6 +73,7 @@ $.get("/version_issues/" + version_id,
       {unixtime: Util.unixtime()},
       function(data) {
           var issues = data.issues
+          console.log("issues", issues)
           model.all_issues = issues
           model.issues = issues
           refresh_issues_amount()
