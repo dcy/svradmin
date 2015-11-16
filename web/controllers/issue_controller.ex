@@ -90,6 +90,7 @@ defmodule Svradmin.IssueController do
     new_params = Util.remove_maps_nil(issue_params)
     issue = Repo.get!(Issue, id)
     changeset = Issue.changeset(issue, new_params)
+    IO.inspect({"***udpate changeset", changeset})
 
     case Repo.update(changeset) do
       {:ok, issue} ->
@@ -126,6 +127,27 @@ defmodule Svradmin.IssueController do
     issue = Repo.get!(Issue, id)
     issue_map = Util.remove_ecto_struct_keys(Map.from_struct(issue))
     json conn, %{issue: issue_map}
+  end
+
+  def format_designer_infos() do
+    issues = Repo.all(Issue)
+    for issue <- issues, do: format_designer_infos issue
+  end
+
+  def format_designer_infos(issue) do
+    designer_id = issue.designer_id
+    is_done_design = issue.is_done_design
+    designer_infos = Poison.encode!([%{designer_id: designer_id, is_done_design: is_done_design}])
+    changeset = Issue.changeset(issue, %{designer_infos: designer_infos})
+    IO.inspect({"***changeset", changeset})
+    case Repo.update(changeset) do
+      {:ok, issue} ->
+        IO.inspect({"****format_designer_infos success", issue.id})
+      {:error, changeset} ->
+        IO.inspect({"******error changeset", changeset})
+        errors = :io_lib.format("~p", [changeset.errors])
+        Logger.error "Create issue's error #{errors}"
+    end
   end
 
 end

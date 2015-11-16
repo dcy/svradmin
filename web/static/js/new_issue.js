@@ -4,6 +4,7 @@ $(".basic-select2").select2()
 
 var version_id = $('#data').data('version_id')
 
+var empty_designer_info = {designer_id: "", is_done_design: ""}
 var model = avalon.define({
     $id: "new_issue",
     issue: {title: "", content: "", designer_id: "", is_done_design: "", designer_infos: [], frontend_ids: "", backend_ids: "", remark: ""},
@@ -11,7 +12,11 @@ var model = avalon.define({
     to_show: function() {
         location.href = "/versions/" + version_id
     },
-    designers: []
+    designers: [],
+    designer_infos: [empty_designer_info],
+    to_add_designer_info: function() {
+        model.designer_infos.push(Util.copy_obj(empty_designer_info))
+    }
 })
 
 

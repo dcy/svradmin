@@ -170,6 +170,16 @@ let Util = {
 
     designer_states() {
         return [{name: "已完成", value: 1}, {name: "未完成", value: 0}, {name: "不需要", value: -1}]
+    },
+
+    copy_obj(obj) {
+        var new_obj = {}
+        var i
+        for (var i in obj) {
+            new_obj[i] = obj[i];
+        }
+        return new_obj
     }
+
 }
 export default Util

@@ -148,19 +148,36 @@ defmodule Svradmin.VersionController do
   #    backend_state: format_redmine_state(backend_id), remark: remark}
   #end
   defp format_issue(parent, issue) do
-    %Issue{id: id, title: title, content: content, designer_id: designer_id, is_done_design: is_done_design,
+    %Issue{id: id, title: title, content: content, designer_id: designer_id, is_done_design: is_done_design, designer_infos: str_designer_infos,
       frontend_ids: ori_frontend_ids, backend_ids: ori_backend_ids, remark: remark} = issue
+    ori_designer_infos = case str_designer_infos do
+      "" -> []
+      _ -> Poison.decode!(str_designer_infos)
+    end
     frontend_ids = String.split(ori_frontend_ids, ",")
     backend_ids = String.split(ori_backend_ids, ",")
     designer = Repo.get!(User, designer_id)
     designer_name = designer.cn_name
     designer_state_name = get_designer_state_name(is_done_design)
+    designer_infos = format_designer_infos(ori_designer_infos)
     frontend_states = for frontend_id <- frontend_ids, do: format_redmine_state(frontend_id)
     backend_states = for backend_id <- backend_ids, do: format_redmine_state(backend_id)
     formated_issue = %{id: id, title: title, content: content, designer_name: designer_name,
-      designer_state_name: designer_state_name, frontend_states: frontend_states,
+      designer_state_name: designer_state_name, designer_infos: designer_infos, frontend_states: frontend_states,
       backend_states: backend_states, remark: remark}
     send parent, {:issue, formated_issue}
+  end
+
+  defp format_designer_infos(designer_infos) do
+    IO.inspect({"***designer_infos", designer_infos})
+    fun = fn designer_info ->
+      %{"designer_id" => designer_id, "is_done_design" => is_done_design} = designer_info
+      designer = Repo.get!(User, designer_id)
+      designer_name = designer.cn_name
+      designer_state_name = get_designer_state_name(is_done_design)
+      %{designer_id: designer_id, designer_name: designer_name, designer_state_name: designer_state_name}
+    end
+    Enum.map(designer_infos, fun)
   end
 
 
