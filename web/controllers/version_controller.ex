@@ -130,6 +130,10 @@ defmodule Svradmin.VersionController do
   end
 
   defp get_designer_state_name(state_id) do
+    state_id = case is_integer(state_id) do
+      true -> state_id
+      false -> String.to_integer(state_id)
+    end
     designer_states = Util.get_conf(:designer_states)
     state = Util.mapskeyfind(state_id, :value, designer_states)
     state.name
@@ -169,7 +173,6 @@ defmodule Svradmin.VersionController do
   end
 
   defp format_designer_infos(designer_infos) do
-    IO.inspect({"***designer_infos", designer_infos})
     fun = fn designer_info ->
       %{"designer_id" => designer_id, "is_done_design" => is_done_design} = designer_info
       designer = Repo.get!(User, designer_id)

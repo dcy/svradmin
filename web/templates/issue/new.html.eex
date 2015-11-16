@@ -31,7 +31,7 @@
                   <input type="text" ms-duplex="issue.content" class="form-control" id="content" name="content">
                 </div>
               </div>
-              <div class="form-group">
+              <!-- <div class="form-group">
                 <label for="designer_id" class="col-xs-3 control-label">策划</label>
                 <div class="col-xs-6">
                   <select id="designer_id" name="designer_id" ms-duplex="issue.designer_id" class="basic-select2" style="width: 100%">
@@ -39,15 +39,15 @@
                     <option ms-attr-value=[[designer.id]] ms-repeat-designer="designers">{{designer.cn_name}}</option>
                   </select>
                 </div>
-              </div>
-              <div class="form-group">
+              </div> -->
+              <!-- <div class="form-group">
                 <label for="is_done_design" class="col-xs-3 control-label">策划案状态</label>
                 <div class="col-xs-6 rightIcon">
                   <label class="radio-inline" ms-repeat-state="designer_states">
                     <input type="radio" ms-duplex-string="issue.is_done_design" name="is_done_design" ms-attr-value="state.value">{{ state.name }}
                   </label>
                 </div>
-              </div>
+              </div> -->
               <div class="form-group">
                 <label for="designer_infos" class="col-xs-3 control-label">策划</label>
                 <div class="col-xs-6">
@@ -56,7 +56,7 @@
                       <div class="col-xs-5">
                         <select class="form-control" name="designer_id" ms-duplex="designer_info.designer_id">
                           <option value="">请选择一个策划</option>
-                          <option ms-attr-value="designer.designer_id" ms-repeat-designer="designers">{{ designer.cn_name }}</option>
+                          <option ms-attr-value="designer.id" ms-repeat-designer="designers">{{ designer.cn_name }}</option>
                         </select>
                       </div>
 

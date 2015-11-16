@@ -20,15 +20,18 @@ defmodule Svradmin.IssueController do
   end
 
   def create(conn, %{"issue" => issue_params}) do
+    ori_designer_infos = issue_params["designer_infos"]
+    designer_infos = Map.values(ori_designer_infos)
+    issue_params = %{issue_params | "designer_infos" => Poison.encode!(designer_infos)}
     #new_params = case issue_params["remark"] do
     #  nil -> %{issue_params | "remark" => ""}
     #  _ -> issue_params
     #end
     new_params = remove_maps_nil(issue_params)
-    new_params = case new_params["designer_infos"] do
-      nil -> Map.put(new_params, "designer_infos", "[]")
-      designer_infos -> %{new_params | "designer_infos" => Poison.encode!(designer_infos)}
-    end
+    #new_params = case new_params["designer_infos"] do
+    #  nil -> Map.put(new_params, "designer_infos", "[]")
+    #  designer_infos -> %{new_params | "designer_infos" => Poison.encode!(designer_infos)}
+    #end
     
     version_id = new_params["version_id"]
     changeset = Issue.changeset(%Issue{}, new_params)
@@ -87,10 +90,12 @@ defmodule Svradmin.IssueController do
     #  nil -> %{new_params | "designer_infos" => "[]"}
     #  _ -> new_params
     #end
+    ori_designer_infos = issue_params["designer_infos"]
+    designer_infos = Map.values(ori_designer_infos)
+    issue_params = %{issue_params | "designer_infos" => Poison.encode!(designer_infos)}
     new_params = Util.remove_maps_nil(issue_params)
     issue = Repo.get!(Issue, id)
     changeset = Issue.changeset(issue, new_params)
-    IO.inspect({"***udpate changeset", changeset})
 
     case Repo.update(changeset) do
       {:ok, issue} ->
@@ -126,7 +131,9 @@ defmodule Svradmin.IssueController do
   def get_issue(conn, %{"id" =>id}) do
     issue = Repo.get!(Issue, id)
     issue_map = Util.remove_ecto_struct_keys(Map.from_struct(issue))
-    json conn, %{issue: issue_map}
+    str_designer_infos = issue_map.designer_infos
+    designer_infos = Poison.decode!(str_designer_infos)
+    json conn, %{issue: %{issue_map | :designer_infos => designer_infos}}
   end
 
   def format_designer_infos() do
@@ -139,7 +146,6 @@ defmodule Svradmin.IssueController do
     is_done_design = issue.is_done_design
     designer_infos = Poison.encode!([%{designer_id: designer_id, is_done_design: is_done_design}])
     changeset = Issue.changeset(issue, %{designer_infos: designer_infos})
-    IO.inspect({"***changeset", changeset})
     case Repo.update(changeset) do
       {:ok, issue} ->
         IO.inspect({"****format_designer_infos success", issue.id})

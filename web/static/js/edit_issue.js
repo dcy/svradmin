@@ -3,14 +3,18 @@ import Util from "./util"
 var issue_id = $('#data').data("issue_id")
 console.log("is_login", Util.is_login)
 
+var empty_designer_info = {designer_id: "", is_done_design: ""}
 var model = avalon.define({
     $id: "issue",
-    issue: {id: "", version_id: "", title: "", content: "", designer_id: "", is_done_design: "", frontend_ids: "", backend_ids: "", remark: ""},
+    issue: {id: "", version_id: "", title: "", content: "", designer_id: "", is_done_design: "", designer_infos: [], frontend_ids: "", backend_ids: "", remark: ""},
     designer_states: Util.designer_states(),
     versions: [],
     designers: [],
     to_show: function() {
         location.href = "/newest_version"
+    },
+    to_add_designer_info: function() {
+        model.issue.designer_infos.push(Util.copy_obj(empty_designer_info))
     }
 })
 

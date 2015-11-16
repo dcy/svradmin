@@ -47,7 +47,7 @@
               <tr>
                 <th>标题</th>
                 <th>内容</th>
-                <th>策划</th>
+                <!-- <th>策划</th> -->
                 <th>策划</th>
                 <th>前端</th>
                 <th>后端</th>
@@ -57,10 +57,10 @@
               <tr ms-repeat-issue="issues" class="">
                 <td width="12%">{{ issue.title }}</td>
                 <td width="18%">{{ issue.content }}</td>
-                <td>
+                <!-- <td>
                   <span class="badge">{{ issue.designer_name }}</span>
                   <span class="badge bg-yellow">{{ issue.designer_state_name }}</span>
-                </td>
+                </td> -->
                 <td>
                   <div ms-repeat-designer_info="issue.designer_infos">
                     <span class="badge">{{ designer_info.designer_name }}</span>

@@ -7,7 +7,7 @@ var version_id = $('#data').data('version_id')
 var empty_designer_info = {designer_id: "", is_done_design: ""}
 var model = avalon.define({
     $id: "new_issue",
-    issue: {title: "", content: "", designer_id: "", is_done_design: "", designer_infos: [], frontend_ids: "", backend_ids: "", remark: ""},
+    issue: {title: "", content: "", designer_id: 1, is_done_design: 1, designer_infos: [], frontend_ids: "", backend_ids: "", remark: ""},
     designer_states: Util.designer_states(),
     to_show: function() {
         location.href = "/versions/" + version_id
@@ -22,7 +22,7 @@ var model = avalon.define({
 
 $.get("/get_users",
       function(data) {
-         model.designers = data.users 
+          model.designers = data.users 
       }
      )
 
@@ -83,9 +83,9 @@ $.get("/get_users",
      .on('success.form.bv', function(e) {
          e.preventDefault()
          var issue_vals = model.issue.$model
-         issue_vals.designer_id = $('#designer_id').val()
+         //issue_vals.designer_id = $('#designer_id').val()
          issue_vals.version_id = version_id
-         console.log("***issue_vals", issue_vals)
+         issue_vals.designer_infos = model.designer_infos.$model
          $.post("/issues",
                 {issue: issue_vals, _csrf_token: Util.csrf_token},
                 function(data) {
