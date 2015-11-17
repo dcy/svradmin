@@ -13,7 +13,7 @@ var model = avalon.define({
         location.href = "/versions/" + version_id
     },
     designers: [],
-    designer_infos: [empty_designer_info],
+    designer_infos: [],
     to_add_designer_info: function() {
         model.designer_infos.push(Util.copy_obj(empty_designer_info))
     }
@@ -85,7 +85,7 @@ $.get("/get_users",
          var issue_vals = model.issue.$model
          //issue_vals.designer_id = $('#designer_id').val()
          issue_vals.version_id = version_id
-         issue_vals.designer_infos = model.designer_infos.$model
+         issue_vals.designer_infos = select_valid_designer_infos(model.designer_infos.$model)
          $.post("/issues",
                 {issue: issue_vals, _csrf_token: Util.csrf_token},
                 function(data) {
@@ -103,3 +103,15 @@ $.get("/get_users",
      })
 
  })
+
+ function select_valid_designer_infos(designer_infos) {
+     var infos = new Array()
+     for (var i in designer_infos) {
+         var item = designer_infos[i]
+         console.log("item", item)
+         if (item.designer_id != "" && item.is_done_design != "") {
+             infos.push(item)
+         } 
+     }
+     return infos
+ }

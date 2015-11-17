@@ -73,7 +73,6 @@ $.get("/version_issues/" + version_id,
       {unixtime: Util.unixtime()},
       function(data) {
           var issues = data.issues
-          console.log("issues", issues)
           model.all_issues = issues
           model.issues = issues
           refresh_issues_amount()
@@ -122,9 +121,13 @@ function filter_designers() {
     var designers = new Array()
     for (var i in model.all_issues.$model) {
         var item = model.all_issues.$model[i]
-        var designer = item.designer_name
-        if (designers.indexOf(designer) == -1) {
-            designers.push(designer)
+        var designer_infos = item.designer_infos
+        for (var j in designer_infos) {
+            var designer_info = designer_infos[j]
+            var designer = designer_info.designer_name
+            if (designers.indexOf(designer) == -1) {
+                designers.push(designer)
+            }
         }
     }
     model.designers = designers
@@ -187,6 +190,25 @@ $('#developer').on("select2:select", function(e) {
     refresh_issues_amount()
 })
 
+//$('#designer').on("select2:select", function(e) {
+//    $('#developer').val("all").trigger("change")
+//    $('#state').val("all").trigger("change")
+//    var designer = $('#designer').val()
+//    if (designer == "all") {
+//        model.issues = model.all_issues
+//    }
+//    else {
+//        var selected_issues = new Array()
+//        for (var i in model.all_issues.$model) {
+//            var item = model.all_issues.$model[i]
+//            if (item.designer_name == designer) {
+//                selected_issues.push(item)
+//            }
+//        }
+//        model.issues = selected_issues
+//    }
+//    refresh_issues_amount()
+//})
 $('#designer').on("select2:select", function(e) {
     $('#developer').val("all").trigger("change")
     $('#state').val("all").trigger("change")
@@ -198,8 +220,12 @@ $('#designer').on("select2:select", function(e) {
         var selected_issues = new Array()
         for (var i in model.all_issues.$model) {
             var item = model.all_issues.$model[i]
-            if (item.designer_name == designer) {
-                selected_issues.push(item)
+            var designer_infos = item.designer_infos
+            for (var j in designer_infos) {
+                var designer_info = designer_infos[j]
+                if (designer_info.designer_name == designer) {
+                    selected_issues.push(item)
+                }
             }
         }
         model.issues = selected_issues

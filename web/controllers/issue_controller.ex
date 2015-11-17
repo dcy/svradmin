@@ -20,9 +20,12 @@ defmodule Svradmin.IssueController do
   end
 
   def create(conn, %{"issue" => issue_params}) do
-    ori_designer_infos = issue_params["designer_infos"]
-    designer_infos = Map.values(ori_designer_infos)
-    issue_params = %{issue_params | "designer_infos" => Poison.encode!(designer_infos)}
+    designer_infos = case issue_params["designer_infos"] do
+      nil -> [];
+      ori_designer_infos -> Map.values(ori_designer_infos)
+    end
+    #issue_params = %{issue_params | "designer_infos" => Poison.encode!(designer_infos)}
+    issue_params = Map.put(issue_params, "designer_infos", Poison.encode!(designer_infos))
     #new_params = case issue_params["remark"] do
     #  nil -> %{issue_params | "remark" => ""}
     #  _ -> issue_params

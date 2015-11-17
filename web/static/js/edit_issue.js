@@ -119,10 +119,11 @@ $.get("/get_issue/" + issue_id,
      .on('success.form.bv', function(e) {
          e.preventDefault()
          var issue_vals = model.issue.$model
-         issue_vals.designer_id = $('#designer_id').val()
+         //issue_vals.designer_id = $('#designer_id').val()
          var version_id = $('#version_id').val()
          console.log("issue_vals", issue_vals)
          issue_vals.version_id = version_id 
+         issue_vals.designer_infos = select_valid_designer_infos(issue_vals.designer_infos)
          $.ajax({
              type: "put",
              url: "/issues/" + issue_id,
@@ -158,3 +159,15 @@ $.get("/get_issue/" + issue_id,
      })
 
  })
+
+ function select_valid_designer_infos(designer_infos) {
+     var infos = new Array()
+     for (var i in designer_infos) {
+         var item = designer_infos[i]
+         console.log("item", item)
+         if (item.designer_id != "" && item.is_done_design != "") {
+             infos.push(item)
+         } 
+     }
+     return infos
+ }
