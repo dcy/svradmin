@@ -41,7 +41,7 @@
                 <td>
                   <!-- <button class="btn btn-primary btn-xs reload_confs" svr-id=<%= svr.id %> data-loading-text="<i class='fa fa-spinner fa-pulse'></i>热更中"><i class="fa fa-refresh"></i>热更配置</button> -->
                   <button class="btn btn-warning btn-xs reload_svr" svr-id=<%= svr.id %> data-loading-text="<i class='fa fa-spinner fa-pulse'></i>热更中"><i class="fa fa-refresh"></i>热更服务器</button>
-                  <button class="btn btn-danger btn-xs reset_svr" svr-id=<%= svr.id %> data-loading-text="<i class='fa fa-spinner fa-pulse'></i>清除中"><i class="fa fa-trash"></i>重清数据库</button>
+                  <button class="btn btn-danger btn-xs reset_svr" svr-id=<%= svr.id %> data-loading-text="<i class='fa fa-spinner fa-pulse'></i>清除中" disabled><i class="fa fa-trash"></i>重清数据库</button>
                 </td>
                 <td>
                   <%= if svr.is_live do %>
